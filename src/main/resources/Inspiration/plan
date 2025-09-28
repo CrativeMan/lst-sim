@@ -1,0 +1,24 @@
+Windows:
+    - Phone Window
+        - Pick up Phone
+        - Ask People question
+        - Get info about Emergency
+    - Radio Window
+        - Communicate with Units
+        - See Status changes from Units
+        - Request backup from other Services
+    - Call Window
+        - Creating the Call
+        - Entering the info you get from the user
+        - Assigning different Units to that call
+        - Dispatching the call to the available units
+        - See/Edit info on any active call
+    - Active Calls Window
+        - See all the currently active Calls
+        - Click on calls to View/Edit them in the Call Window
+    - Map Window (Maybe)
+        - Show Calls on their Location
+        - Maybe show units and their route
+    - Available Units Window
+        - Show the Status and the Radio Name of all the available Units
+        - Maybe Pop up with more Info on the Unit and which Call they are on
