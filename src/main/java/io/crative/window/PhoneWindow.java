@@ -12,7 +12,6 @@ public class PhoneWindow extends Window {
     private JPanel conversation;
     private JScrollPane conversationScroll;
     private JPanel phoneCalls;
-    private JScrollPane phoneCallsScroll;
 
     private final String[] conversationButtonKeys = {
             "conversation.phone.start",
@@ -64,7 +63,7 @@ public class PhoneWindow extends Window {
         JPanel phoneCallsWrapper = new JPanel(new BorderLayout());
         phoneCallsWrapper.add(phoneCalls, BorderLayout.NORTH);
 
-        phoneCallsScroll = new JScrollPane(phoneCallsWrapper);
+        JScrollPane phoneCallsScroll = new JScrollPane(phoneCallsWrapper);
         phoneCallsScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         phoneCallsScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -109,7 +108,7 @@ public class PhoneWindow extends Window {
         callIncomingButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-call.png")));
         callIncomingButton.addActionListener(e -> {
             System.out.println("Accepted incoming call");
-            addCallEntry("Incoming Call Accepted");
+            addCallEntry();
         });
 
         JButton callHoldButton = new JButton();
@@ -175,14 +174,23 @@ public class PhoneWindow extends Window {
         });
     }
 
-    public void addCallEntry(String status) {
-        String timestamp = new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date());
+    public void addCallEntry() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
 
-        JLabel entryLabel = new JLabel(timestamp + " - " + status);
-        entryLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        entryLabel.setFont(entryLabel.getFont().deriveFont(Font.PLAIN, 12f));
+        JPanel panelInfo = new JPanel();
+        panelInfo.setLayout(new GridLayout(3, 1));
+        panelInfo.add(new JLabel("112"));
+        panelInfo.add(new JLabel("+49 1515 2249137"));
+        panelInfo.add(new JLabel("München"));
 
-        phoneCalls.add(entryLabel, 0);
+        panel.add(panelInfo, BorderLayout.WEST);
+        Image img = FileLoader.loadImageScaled("/icons/phone/phone-call.png", 2.0F);
+        assert img != null;
+        panel.add(new JLabel(new ImageIcon(img)), BorderLayout.EAST);
+        panel.setBorder(new LineBorder(Color.BLACK));
+
+        phoneCalls.add(panel, 0);
 
         phoneCalls.add(Box.createVerticalStrut(2), 1);
 

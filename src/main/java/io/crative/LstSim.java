@@ -4,13 +4,9 @@ import io.crative.internationalization.TranslationManager;
 import io.crative.window.*;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 class LstSim {
-    private PhoneWindow phoneWindow;
-    private RadioWindow radioWindow;
-    private TestWindow testWindow;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -26,15 +22,13 @@ class LstSim {
     public void initialize() {
         TranslationManager.getInstance();
 
-        phoneWindow = new PhoneWindow();
-        radioWindow = new RadioWindow();
-        testWindow = new TestWindow();
+        PhoneWindow phoneWindow = new PhoneWindow();
+        RadioWindow radioWindow = new RadioWindow();
 
-        WindowLayoutManager.initialize(List.of(phoneWindow, radioWindow, testWindow));
+        WindowLayoutManager.initialize(List.of(phoneWindow, radioWindow));
 
         phoneWindow.setVisible(true);
         radioWindow.setVisible(true);
-        testWindow.setVisible(true);
 
         phoneWindow.addMessage("Test", false);
     }
