@@ -11,6 +11,8 @@ import static io.crative.internationalization.TranslationManager.t;
 public class PhoneWindow extends Window {
     private JPanel conversation;
     private JScrollPane conversationScroll;
+    private JPanel phoneCalls;
+    private JScrollPane phoneCallsScroll;
 
     private final String[] conversationButtonKeys = {
             "conversation.phone.start",
@@ -33,9 +35,9 @@ public class PhoneWindow extends Window {
     private static final int DEFAULT_WIDTH = 900;
     private static final int DEFAULT_HEIGHT = 700;
 
-    public static final float MAIN_SPLIT_WEIGHT = 1.0F;
-    public static final float CONVERSATION_SPLIT_WEIGHT = 1.0F;
-    public static final float PHONE_SPLIT_WEIGHT = 0.05F;
+    private static final float MAIN_SPLIT_WEIGHT = 1.0F;
+    private static final float CONVERSATION_SPLIT_WEIGHT = 1.0F;
+    private static final float PHONE_SPLIT_WEIGHT = 0.05F;
 
     public PhoneWindow() {
         super("phone",DEFAULT_X,DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -47,6 +49,33 @@ public class PhoneWindow extends Window {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Conversation bubble Panel
+        createConversation();
+
+        // Conversation actions
+        JPanel conversationActions = createConversationActions();
+
+        // Phone Actions
+        JPanel phoneActions = createPhoneActions();
+
+        // Phone Calls List
+        phoneCalls = new JPanel();
+        phoneCalls.setLayout(new BoxLayout(phoneCalls, BoxLayout.Y_AXIS));
+
+        JPanel phoneCallsWrapper = new JPanel(new BorderLayout());
+        phoneCallsWrapper.add(phoneCalls, BorderLayout.NORTH);
+
+        phoneCallsScroll = new JScrollPane(phoneCallsWrapper);
+        phoneCallsScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        phoneCallsScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        // Putting it all together
+        JSplitPane splitPane = getSplitPane(phoneActions, phoneCallsScroll, conversationActions);
+
+        this.add(splitPane);
+        this.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    }
+
+    private void createConversation() {
         conversation = new JPanel();
         conversation.setLayout(new BoxLayout(conversation, BoxLayout.Y_AXIS));
 
@@ -56,8 +85,9 @@ public class PhoneWindow extends Window {
         conversationScroll = new JScrollPane(conversationWrapper);
         conversationScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         conversationScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    }
 
-        // Conversation actions
+    private JPanel createConversationActions() {
         JPanel conversationActions = new JPanel();
         conversationActions.setLayout(new BoxLayout(conversationActions, BoxLayout.Y_AXIS));
         for (String key : conversationButtonKeys) {
@@ -69,19 +99,7 @@ public class PhoneWindow extends Window {
             conversationActions.add(b);
             conversationActions.add(Box.createVerticalStrut(5));
         }
-
-        // Phone Actions
-        JPanel phoneActions = createPhoneActions();
-
-        // Phone Calls List
-        JPanel phoneCalls = new JPanel();
-        phoneCalls.setLayout(new BoxLayout(phoneCalls, BoxLayout.Y_AXIS));
-
-        // Putting it all together
-        JSplitPane splitPane = getSplitPane(phoneActions, phoneCalls, conversationActions);
-
-        this.add(splitPane);
-        this.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        return conversationActions;
     }
 
     private JPanel createPhoneActions() {
@@ -89,7 +107,10 @@ public class PhoneWindow extends Window {
 
         JButton callIncomingButton = new JButton();
         callIncomingButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-call.png")));
-        callIncomingButton.addActionListener(e -> System.out.println("Accepted incoming call"));
+        callIncomingButton.addActionListener(e -> {
+            System.out.println("Accepted incoming call");
+            addCallEntry("Incoming Call Accepted");
+        });
 
         JButton callHoldButton = new JButton();
         callHoldButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-hold.png")));
@@ -111,7 +132,7 @@ public class PhoneWindow extends Window {
         return phoneActions;
     }
 
-    private JSplitPane getSplitPane(JPanel phoneActions, JPanel phoneCalls, JPanel conversationActions) {
+    private JSplitPane getSplitPane(JPanel phoneActions, JComponent phoneCalls, JPanel conversationActions) {
         JSplitPane phoneCallsSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, phoneActions, phoneCalls);
         phoneCallsSplit.setResizeWeight(PHONE_SPLIT_WEIGHT);
 
@@ -152,5 +173,20 @@ public class PhoneWindow extends Window {
             JScrollBar bar = conversationScroll.getVerticalScrollBar();
             bar.setValue(bar.getMaximum());
         });
+    }
+
+    public void addCallEntry(String status) {
+        String timestamp = new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date());
+
+        JLabel entryLabel = new JLabel(timestamp + " - " + status);
+        entryLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        entryLabel.setFont(entryLabel.getFont().deriveFont(Font.PLAIN, 12f));
+
+        phoneCalls.add(entryLabel, 0);
+
+        phoneCalls.add(Box.createVerticalStrut(2), 1);
+
+        phoneCalls.revalidate();
+        phoneCalls.repaint();
     }
 }
