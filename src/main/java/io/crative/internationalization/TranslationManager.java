@@ -11,13 +11,13 @@ import java.util.Properties;
 public class TranslationManager {
     private static TranslationManager instance;
     private Map<String, Properties> languages = new HashMap<>();
-    private String currentLanguage = "de_DE";
+    private String currentLanguage = "en_US";
     private Properties fallbackLanguage;
 
     private TranslationManager() {
         loadLanguage("en_US");
         loadLanguage("de_DE");
-        fallbackLanguage = languages.get("de_DE");
+        fallbackLanguage = languages.get("en_US");
     }
 
     public static TranslationManager getInstance() {

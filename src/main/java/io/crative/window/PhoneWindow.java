@@ -2,6 +2,7 @@ package io.crative.window;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
@@ -50,9 +51,21 @@ public class PhoneWindow extends JFrame {
         Image img;
 
         JButton callIncomingButton = new JButton();
+        callIncomingButton.addActionListener(e -> {
+            System.out.println("Accepted incoming call");
+        });
         JButton callHoldButton = new JButton();
+        callHoldButton.addActionListener(e-> {
+            System.out.println("Put call on hold");
+        });
         JButton callCancelButton = new JButton();
+        callCancelButton.addActionListener(e->{
+            System.out.println("Cancelled call");
+        });
         JButton callOutgoingButton = new JButton();
+        callOutgoingButton.addActionListener(e->{
+            System.out.println("Called an number");
+        });
 
         try {
             img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/icons/phone/phone-call-incoming.png")));
@@ -72,11 +85,11 @@ public class PhoneWindow extends JFrame {
         phoneActions.add(callCancelButton);
         phoneActions.add(callOutgoingButton);
 
-        JPanel conversationActions = new JPanel(new GridLayout(13,1));
+        JPanel conversationActions = new JPanel(new GridLayout(13, 1));
         for (String key : conversationButtonKeys) {
             JButton b = new JButton(t(key));
             b.addActionListener(e -> {
-                addMessage(key, true);
+                addMessage(t(key + ".message"), true);
             });
             conversationActions.add(b);
         }
@@ -104,7 +117,7 @@ public class PhoneWindow extends JFrame {
         messageArea.setColumns(20);
         messageArea.setEditable(false);
         messageArea.setOpaque(true);
-        messageArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        messageArea.setBorder(new LineBorder(Color.DARK_GRAY));
         messageArea.setForeground(Color.WHITE);
 
         if (isMine) {
