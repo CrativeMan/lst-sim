@@ -8,7 +8,7 @@ import java.awt.*;
 
 import static io.crative.internationalization.TranslationManager.t;
 
-public class PhoneWindow extends JFrame {
+public class PhoneWindow extends Window {
     private JPanel conversation;
     private JScrollPane conversationScroll;
 
@@ -29,6 +29,7 @@ public class PhoneWindow extends JFrame {
     };
 
     public PhoneWindow() {
+        super("phone",0,0, 900, 700);
         initialize();
     }
 

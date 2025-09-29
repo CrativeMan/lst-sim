@@ -2,18 +2,17 @@ package io.crative;
 
 import io.crative.internationalization.TranslationManager;
 import io.crative.window.PhoneWindow;
-
-import static io.crative.internationalization.TranslationManager.t;
+import io.crative.window.RadioWindow;
+import io.crative.window.Window;
+import io.crative.window.WindowLayoutManager;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 class LstSim {
-    private PhoneWindow phoneWindow;
-    private JFrame radioWindow;
-    private JFrame callWindow;
-    private JFrame activeCallWindow;
-    private JFrame mapWindow;
-    private JFrame unitsWindow;
+    private Window phoneWindow;
+    private Window radioWindow;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -27,40 +26,19 @@ class LstSim {
     }
 
     public void initialize() {
-        TranslationManager tm = TranslationManager.getInstance();
+        TranslationManager.getInstance();
 
         phoneWindow = new PhoneWindow();
-        createRadioWindow();
-        createCallWindow();
-        createActiveCallsWindow();
-        createMapWindow();
-        createUnitsWindow();
+        radioWindow = new RadioWindow();
+
+        WindowLayoutManager.initialize(List.of(phoneWindow, radioWindow));
+
+        WindowLayoutManager.applyWindowLayout(phoneWindow);
+        WindowLayoutManager.addLayoutSaveListener(phoneWindow);
+        WindowLayoutManager.applyWindowLayout(radioWindow);
+        WindowLayoutManager.addLayoutSaveListener(radioWindow);
 
         phoneWindow.setVisible(true);
         radioWindow.setVisible(true);
-        callWindow.setVisible(true);
-        activeCallWindow.setVisible(true);
-        mapWindow.setVisible(true);
-        unitsWindow.setVisible(true);
-    }
-
-    private void createRadioWindow() {
-        radioWindow = new JFrame(t("window.title.radio"));
-    }
-
-    private void createCallWindow() {
-        callWindow = new JFrame(t("window.title.call"));
-    }
-
-    private void createActiveCallsWindow() {
-        activeCallWindow = new JFrame(t("window.title.activeCall"));
-    }
-
-    private void createMapWindow() {
-        mapWindow = new JFrame(t("window.title.map"));
-    }
-
-    private void createUnitsWindow() {
-        unitsWindow = new JFrame(t("window.title.units"));
     }
 }
