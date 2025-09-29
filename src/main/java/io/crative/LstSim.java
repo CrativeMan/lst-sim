@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 class LstSim {
-    private Window phoneWindow;
-    private Window radioWindow;
-    private Window testWindow;
+    private PhoneWindow phoneWindow;
+    private RadioWindow radioWindow;
+    private TestWindow testWindow;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -35,5 +35,7 @@ class LstSim {
         phoneWindow.setVisible(true);
         radioWindow.setVisible(true);
         testWindow.setVisible(true);
+
+        phoneWindow.addMessage("Test", false);
     }
 }

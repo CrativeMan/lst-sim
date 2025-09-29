@@ -28,8 +28,17 @@ public class PhoneWindow extends Window {
             "conversation.phone.ems_coming"
     };
 
+    private static final int DEFAULT_X = 0;
+    private static final int DEFAULT_Y = 0;
+    private static final int DEFAULT_WIDTH = 900;
+    private static final int DEFAULT_HEIGHT = 700;
+
+    public static final float MAIN_SPLIT_WEIGHT = 1.0F;
+    public static final float CONVERSATION_SPLIT_WEIGHT = 1.0F;
+    public static final float PHONE_SPLIT_WEIGHT = 0.05F;
+
     public PhoneWindow() {
-        super("phone",0,0, 900, 700);
+        super("phone",DEFAULT_X,DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         initialize();
     }
 
@@ -37,11 +46,10 @@ public class PhoneWindow extends Window {
         this.setTitle(t("window.title.phone"));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        // Conversation bubble Panel
         conversation = new JPanel();
         conversation.setLayout(new BoxLayout(conversation, BoxLayout.Y_AXIS));
 
-        //--------------------------------------------------------------------------------------------------------------
-        // Conversation bubble Panel
         JPanel conversationWrapper = new JPanel(new BorderLayout());
         conversationWrapper.add(conversation, BorderLayout.NORTH);
 
@@ -49,7 +57,6 @@ public class PhoneWindow extends Window {
         conversationScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         conversationScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        //--------------------------------------------------------------------------------------------------------------
         // Conversation actions
         JPanel conversationActions = new JPanel();
         conversationActions.setLayout(new BoxLayout(conversationActions, BoxLayout.Y_AXIS));
@@ -57,60 +64,63 @@ public class PhoneWindow extends Window {
             JButton b = new JButton(t(key));
             b.addActionListener(e -> {
                 addMessage(t(key + ".message"), true);
+                addMessage(t(key + ".message"), false);
             });
             conversationActions.add(b);
             conversationActions.add(Box.createVerticalStrut(5));
         }
 
-        //--------------------------------------------------------------------------------------------------------------
         // Phone Actions
-        JPanel phoneActions = new JPanel(new GridLayout(1, 3));
+        JPanel phoneActions = createPhoneActions();
+
+        // Phone Calls List
+        JPanel phoneCalls = new JPanel();
+        phoneCalls.setLayout(new BoxLayout(phoneCalls, BoxLayout.Y_AXIS));
+
+        // Putting it all together
+        JSplitPane splitPane = getSplitPane(phoneActions, phoneCalls, conversationActions);
+
+        this.add(splitPane);
+        this.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    }
+
+    private JPanel createPhoneActions() {
+        JPanel phoneActions = new JPanel(new FlowLayout());
+
         JButton callIncomingButton = new JButton();
         callIncomingButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-call.png")));
-        callIncomingButton.addActionListener(e -> {
-            System.out.println("Accepted incoming call");
-        });
+        callIncomingButton.addActionListener(e -> System.out.println("Accepted incoming call"));
+
         JButton callHoldButton = new JButton();
         callHoldButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-hold.png")));
-        callHoldButton.addActionListener(e -> {
-            System.out.println("Put call on hold");
-        });
+        callHoldButton.addActionListener(e -> System.out.println("Put call on hold"));
+
         JButton callCancelButton = new JButton();
         callCancelButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-off.png")));
-        callCancelButton.addActionListener(e -> {
-            System.out.println("Cancelled call");
-        });
+        callCancelButton.addActionListener(e -> System.out.println("Cancelled call"));
+
         JButton callOutgoingButton = new JButton();
         callOutgoingButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-outgoing.png")));
-        callOutgoingButton.addActionListener(e -> {
-            System.out.println("Called an number");
-        });
+        callOutgoingButton.addActionListener(e -> System.out.println("Called an number"));
 
         phoneActions.add(callIncomingButton);
         phoneActions.add(callHoldButton);
         phoneActions.add(callCancelButton);
         phoneActions.add(callOutgoingButton);
 
-        //--------------------------------------------------------------------------------------------------------------
-        // Phone Calls List
-        JPanel phoneCalls = new JPanel();
-        phoneCalls.setLayout(new BoxLayout(phoneCalls, BoxLayout.Y_AXIS));
+        return phoneActions;
+    }
 
-        //--------------------------------------------------------------------------------------------------------------
-        // Putting it all together
+    private JSplitPane getSplitPane(JPanel phoneActions, JPanel phoneCalls, JPanel conversationActions) {
         JSplitPane phoneCallsSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, phoneActions, phoneCalls);
-        phoneCallsSplit.setResizeWeight(0.1);
-        SwingUtilities.invokeLater(() -> phoneCallsSplit.setDividerLocation(0.1));
+        phoneCallsSplit.setResizeWeight(PHONE_SPLIT_WEIGHT);
 
         JSplitPane conversationSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, conversationScroll, conversationActions);
-        conversationSplit.setResizeWeight(1.0);
+        conversationSplit.setResizeWeight(CONVERSATION_SPLIT_WEIGHT);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, conversationSplit, phoneCallsSplit);
-        phoneCallsSplit.setResizeWeight(0.7);
-        SwingUtilities.invokeLater(() -> splitPane.setDividerLocation(0.7));
-
-        this.add(splitPane);
-        this.setSize(1000, 700);
+        splitPane.setResizeWeight(MAIN_SPLIT_WEIGHT);
+        return splitPane;
     }
 
     public void addMessage(String text, boolean isMine) {
@@ -143,5 +153,4 @@ public class PhoneWindow extends Window {
             bar.setValue(bar.getMaximum());
         });
     }
-
 }
