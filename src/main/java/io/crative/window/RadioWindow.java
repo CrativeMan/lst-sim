@@ -1,7 +1,5 @@
 package io.crative.window;
 
-import javax.swing.*;
-
 import static io.crative.internationalization.TranslationManager.t;
 
 public class RadioWindow extends Window{

@@ -19,4 +19,17 @@ public class FileLoader {
         }
         return img;
     }
+
+    public static Image loadImageScaled(String filepath, float scalingFactor) {
+        Image baseImg = FileLoader.loadImage(filepath);
+        if (baseImg == null) {
+            return null;
+        }
+
+        int width = (int) (baseImg.getWidth(null) * scalingFactor);
+        int height = (int) (baseImg.getHeight(null) * scalingFactor);
+
+        return baseImg.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+    }
+
 }

@@ -1,10 +1,7 @@
 package io.crative;
 
 import io.crative.internationalization.TranslationManager;
-import io.crative.window.PhoneWindow;
-import io.crative.window.RadioWindow;
-import io.crative.window.Window;
-import io.crative.window.WindowLayoutManager;
+import io.crative.window.*;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -13,6 +10,7 @@ import java.util.List;
 class LstSim {
     private Window phoneWindow;
     private Window radioWindow;
+    private Window testWindow;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -30,15 +28,12 @@ class LstSim {
 
         phoneWindow = new PhoneWindow();
         radioWindow = new RadioWindow();
+        testWindow = new TestWindow();
 
-        WindowLayoutManager.initialize(List.of(phoneWindow, radioWindow));
-
-        WindowLayoutManager.applyWindowLayout(phoneWindow);
-        WindowLayoutManager.addLayoutSaveListener(phoneWindow);
-        WindowLayoutManager.applyWindowLayout(radioWindow);
-        WindowLayoutManager.addLayoutSaveListener(radioWindow);
+        WindowLayoutManager.initialize(List.of(phoneWindow, radioWindow, testWindow));
 
         phoneWindow.setVisible(true);
         radioWindow.setVisible(true);
+        testWindow.setVisible(true);
     }
 }

@@ -12,13 +12,17 @@ import java.util.Properties;
 
 public class WindowLayoutManager {
     private static final String LAYOUT_FILE = "window_layout.properties";
-    private static Properties layoutProperties = new Properties();
+    private static final Properties layoutProperties = new Properties();
     private static List<Window> windows = new ArrayList<>();
     private static boolean initialized = false;
 
     public static void initialize(List<Window> windows) {
         WindowLayoutManager.windows = windows;
         WindowLayoutManager.initialized = true;
+        for (Window w : WindowLayoutManager.windows) {
+            WindowLayoutManager.applyWindowLayout(w);
+            WindowLayoutManager.addLayoutSaveListener(w);
+        }
     }
 
     static {
