@@ -1,4 +1,4 @@
-package io.crative.window;
+package io.crative.frontend.view;
 
 import javax.swing.*;
 import java.awt.*;

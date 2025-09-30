@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CallManager {
-    private static List<PhoneCall> callQueue;
-    private static List<CallListener> listeners;
-    private static PhoneCall activeCall;
+    private final List<PhoneCall> callQueue;
+    private final List<CallListener> listeners;
+    private PhoneCall activeCall;
 
-    private static CallManager instance;
+    private static final CallManager instance = new CallManager();
 
     private CallManager() {
         callQueue = new ArrayList<>();
@@ -21,21 +21,18 @@ public class CallManager {
     }
 
     public static CallManager getInstance() {
-        if (instance == null) {
-            instance = new CallManager();
-        }
         return instance;
     }
 
     // =================================================================================================================
     // Call Operations
-    public static void receiveIncomingCall(String number, String callerName,Location location) {
-        PhoneCall call = new PhoneCall(number, callerName,location);
+    public void receiveIncomingCall(String number, String callerName, Location location) {
+        PhoneCall call = new PhoneCall(number, callerName, location);
         callQueue.add(call);
         notifyCallReceived(call);
     }
 
-    public static void acceptCall(PhoneCall call) {
+    public void acceptCall(PhoneCall call) {
         if (activeCall != null) {
             System.err.println("CallManager: Already one active call");
             return;
@@ -45,70 +42,73 @@ public class CallManager {
         notifyCallAccepted(call);
     }
 
-    public static void endCall(PhoneCall call) {
+    public void endCall(PhoneCall call) {
         if (activeCall == null) {
             System.err.println("CallManager: No active call to end");
             return;
         }
         call.end();
         activeCall = null;
+        callQueue.remove(call);
         notifyCallEnded(call);
     }
 
-    public static void holdCall(PhoneCall call) {
+    public void holdCall(PhoneCall call) {
         if (activeCall == null) {
             System.err.println("CallManager: No active call to hold");
             return;
         }
         call.hold();
+        activeCall = null;
         notifyCallHeld(call);
     }
 
-    public static void resumeCall(PhoneCall call) {
+    public void resumeCall(PhoneCall call) {
         if (activeCall == null) {
             System.err.println("CallManager: No active call to resume");
             return;
         }
         call.accept();
+        activeCall = call;
         notifyCallResumed(call);
     }
 
     // =================================================================================================================
     // Listeners
-    public static void registerListener(CallListener listener) {
+    public void registerListener(CallListener listener) {
         listeners.add(listener);
     }
 
-    public static void unregisterListener(CallListener listener) {
+    public void unregisterListener(CallListener listener) {
         listeners.remove(listener);
     }
 
-    public static void notifyCallReceived(PhoneCall call) {
-        for (CallListener l : listeners) {
+    public void notifyCallReceived(PhoneCall call) {
+        for (CallListener l : new ArrayList<>(listeners)) {
             l.onCallReceived(call);
         }
     }
 
-    public static void notifyCallAccepted(PhoneCall call) {
-        for (CallListener l : listeners) {
+    public void notifyCallAccepted(PhoneCall call) {
+        for (CallListener l : new ArrayList<>(listeners)) {
             l.onCallAccepted(call);
         }
     }
 
-    public static void notifyCallEnded(PhoneCall call) {
-        for (CallListener l : listeners) {
+    public void notifyCallEnded(PhoneCall call) {
+        for (CallListener l : new ArrayList<>(listeners)) {
             l.onCallEnded(call);
         }
     }
 
-    public static void notifyCallHeld(PhoneCall call) {
-        for (CallListener l : listeners) {
+    public void notifyCallHeld(PhoneCall call) {
+        for (CallListener l : new ArrayList<>(listeners)) {
             l.onCallHeld(call);
         }
     }
 
-    public static void notifyCallResumed(PhoneCall call) {
-        for (CallListener l : listeners) {
+    public void notifyCallResumed(PhoneCall call) {
+        for (CallListener l : new ArrayList<>(listeners)) {
             l.onCallResumed(call);
         }
     }
@@ -116,11 +116,11 @@ public class CallManager {
     // =================================================================================================================
     // Query
 
-    public static PhoneCall getActiveCall() {
+    public PhoneCall getActiveCall() {
         return activeCall;
     }
 
-    public static List<PhoneCall> getIncomingCalls() {
+    public List<PhoneCall> getIncomingCalls() {
         List<PhoneCall> incoming = new ArrayList<>();
         for (PhoneCall call : callQueue) {
             if (call.getStatus() == PhoneCallStatus.RINGING)
@@ -129,7 +129,7 @@ public class CallManager {
         return incoming;
     }
 
-    public static List<PhoneCall> getAllCalls() {
+    public List<PhoneCall> getAllCalls() {
         return callQueue;
     }
 }

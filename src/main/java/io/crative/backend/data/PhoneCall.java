@@ -5,16 +5,16 @@ import java.util.UUID;
 
 public class PhoneCall {
     private UUID uuid;
-    private String phoneNumber;
-    private String callerName;
-    private Location location;
-    private Timestamp timestamp;
+    private final String phoneNumber;
+    private final String callerName;
+    private final Location location;
+    private final Timestamp timestamp;
     private PhoneCallStatus status;
 
     private Conversation conversation;
 
     public PhoneCall(String phoneNumber, String callerName, Location location) {
-        this.uuid = new UUID(0, 1);
+        this.uuid = UUID.randomUUID();
         this.phoneNumber = phoneNumber;
         this.callerName = callerName;
         this.location = location;
@@ -48,5 +48,29 @@ public class PhoneCall {
                 ", status=" + status +
                 ", conversation=" + conversation +
                 '}';
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getCallerName() {
+        return callerName;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public Conversation getConversation() {
+        return conversation;
     }
 }

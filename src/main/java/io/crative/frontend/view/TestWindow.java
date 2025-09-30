@@ -1,6 +1,6 @@
-package io.crative.window;
+package io.crative.frontend.view;
 
-import io.crative.fileio.FileLoader;
+import io.crative.backend.fileio.FileLoader;
 
 import javax.swing.*;
 import java.awt.*;

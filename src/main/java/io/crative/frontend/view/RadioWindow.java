@@ -1,6 +1,6 @@
-package io.crative.window;
+package io.crative.frontend.view;
 
-import static io.crative.internationalization.TranslationManager.t;
+import static io.crative.backend.internationalization.TranslationManager.t;
 
 public class RadioWindow extends Window{
     public RadioWindow() {
@@ -13,5 +13,6 @@ public class RadioWindow extends Window{
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         this.setSize(1000, 360);
+        this.setVisible(true);
     }
 }

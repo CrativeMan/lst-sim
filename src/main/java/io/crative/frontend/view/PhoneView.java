@@ -1,17 +1,25 @@
-package io.crative.window;
+package io.crative.frontend.view;
 
-import io.crative.fileio.FileLoader;
+import io.crative.backend.CallListener;
+import io.crative.backend.CallManager;
+import io.crative.backend.data.PhoneCall;
+import io.crative.backend.data.PhoneCallStatus;
+import io.crative.backend.fileio.FileLoader;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import static io.crative.internationalization.TranslationManager.t;
+import static io.crative.backend.internationalization.TranslationManager.t;
 
-public class PhoneWindow extends Window {
+public class PhoneView extends Window implements CallListener {
     private JPanel conversation;
     private JScrollPane conversationScroll;
     private JPanel phoneCalls;
+    private PhoneCall selectedCall;
+    private JPanel selectedCallPanel;
 
     private final String[] conversationButtonKeys = {
             "conversation.phone.start",
@@ -34,18 +42,22 @@ public class PhoneWindow extends Window {
     private static final int DEFAULT_WIDTH = 900;
     private static final int DEFAULT_HEIGHT = 700;
 
+    private final Color SELECTED_COLOR = new Color(200, 220, 255); // Light blue
+
     private static final float MAIN_SPLIT_WEIGHT = 1.0F;
     private static final float CONVERSATION_SPLIT_WEIGHT = 1.0F;
     private static final float PHONE_SPLIT_WEIGHT = 0.05F;
 
-    public PhoneWindow() {
-        super("phone",DEFAULT_X,DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        initialize();
+    public PhoneView() {
+        super("phone", DEFAULT_X, DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        initializeView();
+        CallManager cm = CallManager.getInstance();
+        cm.registerListener(this);
     }
 
-    private void initialize() {
+    private void initializeView() {
         this.setTitle(t("window.title.phone"));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // Conversation bubble Panel
         createConversation();
@@ -72,6 +84,7 @@ public class PhoneWindow extends Window {
 
         this.add(splitPane);
         this.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        this.setVisible(true);
     }
 
     private void createConversation() {
@@ -92,8 +105,7 @@ public class PhoneWindow extends Window {
         for (String key : conversationButtonKeys) {
             JButton b = new JButton(t(key));
             b.addActionListener(e -> {
-                addMessage(t(key + ".message"), true);
-                addMessage(t(key + ".message"), false);
+                System.out.println(key + " pressed");
             });
             conversationActions.add(b);
             conversationActions.add(Box.createVerticalStrut(5));
@@ -107,17 +119,40 @@ public class PhoneWindow extends Window {
         JButton callIncomingButton = new JButton();
         callIncomingButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-call.png")));
         callIncomingButton.addActionListener(e -> {
-            System.out.println("Accepted incoming call");
-            addCallEntry();
+            if (selectedCall == null) {
+                System.err.println("PhoneActions: No call selected");
+                return;
+            }
+            if (selectedCall.getStatus() == PhoneCallStatus.RINGING) {
+                CallManager.getInstance().acceptCall(selectedCall);
+            } else {
+                if (selectedCall.getStatus() == PhoneCallStatus.ON_HOLD) {
+                    CallManager.getInstance().resumeCall(selectedCall);
+                } else {
+                    System.err.println("Selected call is not ringing or on hold.");
+                }
+            }
         });
 
         JButton callHoldButton = new JButton();
         callHoldButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-hold.png")));
-        callHoldButton.addActionListener(e -> System.out.println("Put call on hold"));
+        callHoldButton.addActionListener(e -> {
+            if (selectedCall != null) {
+                CallManager.getInstance().holdCall(selectedCall);
+            } else {
+                System.err.println("No call selected to hold.");
+            }
+        });
 
         JButton callCancelButton = new JButton();
         callCancelButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-off.png")));
-        callCancelButton.addActionListener(e -> System.out.println("Cancelled call"));
+        callCancelButton.addActionListener(e->{
+            if (selectedCall != null) {
+                CallManager.getInstance().endCall(selectedCall);
+            } else {
+                System.err.println("No call selected to end.");
+            }
+        });
 
         JButton callOutgoingButton = new JButton();
         callOutgoingButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-outgoing.png")));
@@ -174,21 +209,29 @@ public class PhoneWindow extends Window {
         });
     }
 
-    public void addCallEntry() {
+    public void addCallEntry(PhoneCall call) {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
         JPanel panelInfo = new JPanel();
         panelInfo.setLayout(new GridLayout(3, 1));
-        panelInfo.add(new JLabel("112"));
-        panelInfo.add(new JLabel("+49 1515 2249137"));
-        panelInfo.add(new JLabel("München"));
+        panelInfo.add(new JLabel(call.getCallerName() != null ? call.getCallerName() : "Unknown"));
+        panelInfo.add(new JLabel(call.getPhoneNumber()));
+        panelInfo.add(new JLabel(call.getLocation().toString()));
 
         panel.add(panelInfo, BorderLayout.WEST);
         Image img = FileLoader.loadImageScaled("/icons/phone/phone-call.png", 2.0F);
         assert img != null;
         panel.add(new JLabel(new ImageIcon(img)), BorderLayout.EAST);
+
         panel.setBorder(new LineBorder(Color.BLACK));
+
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                selectCall(call, panel);
+            }
+        });
 
         phoneCalls.add(panel, 0);
 
@@ -196,5 +239,48 @@ public class PhoneWindow extends Window {
 
         phoneCalls.revalidate();
         phoneCalls.repaint();
+    }
+
+    private void selectCall(PhoneCall call, JPanel panel) {
+        if (selectedCallPanel != null) {
+            selectedCallPanel.setBackground(UIManager.getColor("Panel.background"));
+            selectedCallPanel.setOpaque(true);
+            selectedCallPanel.repaint();
+        }
+
+        selectedCall =call;
+        selectedCallPanel = panel;
+
+        selectedCallPanel.setBackground(SELECTED_COLOR);
+        selectedCallPanel.setOpaque(true);
+        selectedCallPanel.repaint();
+    }
+
+    // =================================================================================================================
+    // Listener Functions
+
+    @Override
+    public void onCallReceived(PhoneCall call) {
+        addCallEntry(call);
+    }
+
+    @Override
+    public void onCallAccepted(PhoneCall call) {
+        addMessage(t("conversation.phone.start"), true);
+    }
+
+    @Override
+    public void onCallEnded(PhoneCall call) {
+
+    }
+
+    @Override
+    public void onCallHeld(PhoneCall call) {
+
+    }
+
+    @Override
+    public void onCallResumed(PhoneCall call) {
+
     }
 }

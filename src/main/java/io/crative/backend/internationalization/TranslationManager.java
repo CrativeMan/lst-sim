@@ -1,4 +1,4 @@
-package io.crative.internationalization;
+package io.crative.backend.internationalization;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,9 +10,9 @@ import java.util.Properties;
 
 public class TranslationManager {
     private static TranslationManager instance;
-    private Map<String, Properties> languages = new HashMap<>();
+    private final Map<String, Properties> languages = new HashMap<>();
     private String currentLanguage = "en_US";
-    private Properties fallbackLanguage;
+    private final Properties fallbackLanguage;
 
     private TranslationManager() {
         loadLanguage("en_US");
