@@ -1,4 +1,4 @@
-package io.crative.backend;
+package io.crative.backend.data;
 
 public class Location {
     private String city;

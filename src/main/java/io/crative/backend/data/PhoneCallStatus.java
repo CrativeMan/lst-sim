@@ -1,4 +1,4 @@
-package io.crative.backend;
+package io.crative.backend.data;
 
 public enum PhoneCallStatus {
     RINGING,

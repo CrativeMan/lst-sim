@@ -1,4 +1,4 @@
-package io.crative.backend;
+package io.crative.backend.data;
 
 public class Message {
     private String content;
