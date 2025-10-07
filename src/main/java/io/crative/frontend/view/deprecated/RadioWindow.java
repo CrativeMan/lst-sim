@@ -1,7 +1,8 @@
-package io.crative.frontend.view;
+package io.crative.frontend.view.deprecated;
 
 import static io.crative.backend.internationalization.TranslationManager.t;
 
+@Deprecated
 public class RadioWindow extends Window{
     public RadioWindow() {
         super("radio", 0, 720, 900, 350);

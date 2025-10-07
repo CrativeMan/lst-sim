@@ -1,10 +1,11 @@
-package io.crative.frontend.view;
+package io.crative.frontend.view.deprecated;
 
 import io.crative.backend.fileio.FileLoader;
 
 import javax.swing.*;
 import java.awt.*;
 
+@Deprecated
 public class TestWindow extends Window{
     public TestWindow() {
         super("test", 500, 500, 400, 180);

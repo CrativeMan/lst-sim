@@ -1,6 +1,7 @@
 plugins {
     id("java")
     id("application")
+    id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
 group = "io.crative"
@@ -15,12 +16,16 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
+javafx {
+    version = "21.0.1"
+    modules = listOf("javafx.controls", "javafx.fxml")
+}
+
 application {
     mainClass.set("io.crative.LstSim")
 }
 
 dependencies {
-    // No additional dependencies needed for basic Swing
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }

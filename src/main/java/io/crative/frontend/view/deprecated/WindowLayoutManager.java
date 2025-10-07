@@ -1,4 +1,4 @@
-package io.crative.frontend.view;
+package io.crative.frontend.view.deprecated;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+@Deprecated
 public class WindowLayoutManager {
     private static final String LAYOUT_FILE = "window_layout.properties";
     private static final Properties layoutProperties = new Properties();

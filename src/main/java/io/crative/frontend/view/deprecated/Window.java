@@ -1,8 +1,9 @@
-package io.crative.frontend.view;
+package io.crative.frontend.view.deprecated;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+@Deprecated
 public abstract class Window extends JFrame {
     private String prefix;
     private int defaultX, defaultY, defaultWidth, defaultHeight;
