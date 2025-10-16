@@ -1,13 +1,20 @@
 package io.crative.frontend.view;
 
+import io.crative.frontend.utils.ImageButton;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+
+import static io.crative.backend.internationalization.TranslationManager.t;
+
 public class PhoneView {
+    private VBox root;
     private SplitPane mainSplit;
     private SplitPane conversationSplit;
     private SplitPane phoneSplit;
@@ -16,16 +23,14 @@ public class PhoneView {
     private static final double CONVERSATION_SPLIT_DIVIDER = 0.75;
     private static final double PHONE_SPLIT_DIVIDER = 0.20;
 
-    public PhoneView() {
-        initialize();
+    private static final double CALL_BUTTON_SIZE = 16;
+
+    public PhoneView(MenuBar menuBar) {
+        createLayout(menuBar);
     }
 
-    private void initialize() {
-        mainSplit = createLayout();
-    }
-
-    private SplitPane createLayout() {
-        mainSplit = new SplitPane();
+    private void createLayout(MenuBar menuBar) {
+        mainSplit = new SplitPane(menuBar);
         mainSplit.setOrientation(Orientation.HORIZONTAL);
 
         conversationSplit = createConversationSplit();
@@ -34,7 +39,8 @@ public class PhoneView {
         mainSplit.getItems().addAll(conversationSplit, phoneSplit);
         mainSplit.setDividerPositions(MAIN_SPLIT_DIVIDER);
 
-        return mainSplit;
+        root = new VBox(menuBar, mainSplit);
+        VBox.setVgrow(mainSplit, Priority.ALWAYS);
     }
 
     private SplitPane createConversationSplit() {
@@ -62,11 +68,15 @@ public class PhoneView {
         SplitPane split = new SplitPane();
         split.setOrientation(Orientation.VERTICAL);
 
-        VBox phoneButtons = new VBox();
+        HBox phoneButtons = new HBox(10);
         phoneButtons.setStyle("-fx-background-color: lightyellow;");
         phoneButtons.setMinHeight(50);
-        Label buttonsLabel = new Label("Phone Buttons");
-        phoneButtons.getChildren().add(buttonsLabel);
+        phoneButtons.setAlignment(Pos.CENTER);
+
+        Button acceptCallButton = new ImageButton(t("call.phone.accept"),"/icons/phone/phone-call.png", CALL_BUTTON_SIZE, CALL_BUTTON_SIZE);
+        Button holdCallButton = new ImageButton(t("call.phone.hold"),"/icons/phone/phone-hold.png", CALL_BUTTON_SIZE, CALL_BUTTON_SIZE);
+        Button endCallButton = new ImageButton(t("call.phone.end"),"/icons/phone/phone-off.png", CALL_BUTTON_SIZE, CALL_BUTTON_SIZE);
+        phoneButtons.getChildren().addAll(acceptCallButton, holdCallButton, endCallButton);
 
         VBox callList = new VBox();
         callList.setStyle("-fx-background-color: lightcoral;");
@@ -80,7 +90,7 @@ public class PhoneView {
     }
 
     public void show(Stage stage) {
-        Scene scene = new Scene(mainSplit, 900, 700);
+        Scene scene = new Scene(root, 900, 700);
         stage.setScene(scene);
         stage.setTitle("Phone Simulator");
         stage.show();
