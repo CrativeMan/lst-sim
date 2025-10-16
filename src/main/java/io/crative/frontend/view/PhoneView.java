@@ -19,6 +19,22 @@ public class PhoneView {
     private SplitPane conversationSplit;
     private SplitPane phoneSplit;
 
+    private final String[] CONVERSATION_BUTTON_KEYS = {
+            "conversation.phone.start",
+            "conversation.phone.name_caller",
+            "conversation.phone.name_patient",
+            "conversation.phone.call_location",
+            "conversation.phone.what_happened",
+            "conversation.phone.consciousness",
+            "conversation.phone.breathing_problem",
+            "conversation.phone.pain",
+            "conversation.phone.injuries",
+            "conversation.phone.previous_illnesses",
+            "conversation.phone.drugs",
+            "conversation.phone.age_patient",
+            "conversation.phone.ems_coming"
+    };
+
     private static final double MAIN_SPLIT_DIVIDER = 0.75;
     private static final double CONVERSATION_SPLIT_DIVIDER = 0.75;
     private static final double PHONE_SPLIT_DIVIDER = 0.20;
@@ -30,7 +46,7 @@ public class PhoneView {
     }
 
     private void createLayout(MenuBar menuBar) {
-        mainSplit = new SplitPane(menuBar);
+        mainSplit = new SplitPane();
         mainSplit.setOrientation(Orientation.HORIZONTAL);
 
         conversationSplit = createConversationSplit();
@@ -56,8 +72,15 @@ public class PhoneView {
         VBox conversationActions = new VBox();
         conversationActions.setStyle("-fx-background-color: lightgreen;");
         conversationActions.setMinWidth(50);
-        Label actionsLabel = new Label("Actions");
-        conversationActions.getChildren().add(actionsLabel);
+
+        for (String key : CONVERSATION_BUTTON_KEYS) {
+            Button actionButton = new Button(t(key));
+            actionButton.setMaxWidth(Double.MAX_VALUE);
+            actionButton.setOnAction(e -> {
+                System.out.println("Action: " + t(key + ".message"));
+            });
+            conversationActions.getChildren().add(actionButton);
+        }
 
         split.getItems().addAll(conversationArea, conversationActions);
         split.setDividerPositions(CONVERSATION_SPLIT_DIVIDER);
@@ -74,8 +97,17 @@ public class PhoneView {
         phoneButtons.setAlignment(Pos.CENTER);
 
         Button acceptCallButton = new ImageButton(t("call.phone.accept"),"/icons/phone/phone-call.png", CALL_BUTTON_SIZE, CALL_BUTTON_SIZE);
+        acceptCallButton.setOnAction(e -> {
+            System.out.println("Accept Call Pressed");
+        });
         Button holdCallButton = new ImageButton(t("call.phone.hold"),"/icons/phone/phone-hold.png", CALL_BUTTON_SIZE, CALL_BUTTON_SIZE);
+        holdCallButton.setOnAction(e -> {
+            System.out.println("Hold Call Pressed");
+        });
         Button endCallButton = new ImageButton(t("call.phone.end"),"/icons/phone/phone-off.png", CALL_BUTTON_SIZE, CALL_BUTTON_SIZE);
+        endCallButton.setOnAction(e -> {
+            System.out.println("End Call Pressed");
+        });
         phoneButtons.getChildren().addAll(acceptCallButton, holdCallButton, endCallButton);
 
         VBox callList = new VBox();
@@ -91,9 +123,18 @@ public class PhoneView {
 
     public void show(Stage stage) {
         Scene scene = new Scene(root, 900, 700);
+
+        scene.getStylesheets().add(getClass().getResource("/styles/global-font.css").toExternalForm());
+
         stage.setScene(scene);
         stage.setTitle("Phone Simulator");
+
+        FXWindowLayoutManager.loadLayout();
+        FXWindowLayoutManager.applyWindowLayout(stage, "phoneView", 100, 100, 900, 700);
+
         stage.show();
+
+        FXWindowLayoutManager.addLayoutSaveListeners(stage, "phoneView");
 
         stage.setOnShown(e -> {
             mainSplit.setDividerPositions(MAIN_SPLIT_DIVIDER);

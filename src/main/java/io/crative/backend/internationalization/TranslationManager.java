@@ -17,7 +17,7 @@ public class TranslationManager {
     private TranslationManager() {
         loadLanguage("en_US");
         loadLanguage("de_DE");
-        fallbackLanguage = languages.get("en_US");
+        fallbackLanguage = languages.get("de_DE");
     }
 
     public static TranslationManager getInstance() {
@@ -98,5 +98,14 @@ public class TranslationManager {
         Properties currentLang = languages.get(currentLanguage);
         return (currentLang != null && currentLang.containsKey(key)) ||
                 (fallbackLanguage != null && fallbackLanguage.containsKey(key));
+    }
+
+    public void setStartLanguage(String code) {
+        if (this.languages.containsKey(code)) {
+            this.currentLanguage = code;
+            System.out.println("TranslationManager: Set start language to '"+code+"'");
+        } else {
+            System.err.println("TranslationManager: Language '"+code+"' not available");
+        }
     }
 }
