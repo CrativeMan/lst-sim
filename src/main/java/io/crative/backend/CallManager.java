@@ -6,6 +6,7 @@ import io.crative.backend.data.PhoneCallStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CallManager {
     private final List<PhoneCall> callQueue;
@@ -131,5 +132,13 @@ public class CallManager {
 
     public List<PhoneCall> getAllCalls() {
         return callQueue;
+    }
+
+    public PhoneCall getCallByUUID(UUID uuid) {
+        for (PhoneCall call : callQueue) {
+            if (call.getUuid().equals(uuid))
+                return call;
+        }
+        return null;
     }
 }
