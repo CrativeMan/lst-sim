@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
@@ -52,7 +53,7 @@ public class PhoneView {
     public void show(Stage stage) {
         Scene scene = new Scene(root, 900, 700);
 
-        scene.getStylesheets().add(getClass().getResource("/styles/global-font.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/styles/global.css").toExternalForm());
 
         stage.setScene(scene);
         stage.setTitle("Phone Simulator");
@@ -82,6 +83,7 @@ public class PhoneView {
         mainSplit.setDividerPositions(MAIN_SPLIT_DIVIDER);
 
         root = new VBox(menuBar, mainSplit);
+        root.setStyle("-fx-background-color: #1e1e1e;");
         VBox.setVgrow(mainSplit, Priority.ALWAYS);
     }
 
@@ -93,6 +95,7 @@ public class PhoneView {
         // Conversation Bubble Area
         conversationMessagesContainer = new VBox(5);
         conversationMessagesContainer.setStyle("-fx-padding: 10;");
+        conversationMessagesContainer.getStyleClass().add("conversation-messages");
 
         conversationScroll = new ScrollPane(conversationMessagesContainer);
         conversationScroll.setFitToWidth(true);
@@ -109,6 +112,7 @@ public class PhoneView {
 
         VBox conversationActions = new VBox();
         conversationActions.setMinWidth(50);
+        conversationActions.getStyleClass().add("conversation-actions");
 
         for (String key : CONVERSATION_BUTTON_KEYS) {
             Button actionButton = new ImageButton(t(key), "/icons/message-circle-question-mark.png");
@@ -135,9 +139,9 @@ public class PhoneView {
         // =============================================================================================================
         // Phone Call Buttons
         HBox phoneButtons = new HBox(10);
-        phoneButtons.setStyle("-fx-background-color: lightyellow;");
         phoneButtons.setMinHeight(50);
         phoneButtons.setAlignment(Pos.CENTER);
+        phoneButtons.getStyleClass().add("phone-buttons");
 
         Button acceptCallButton = new ImageButton(t("call.phone.accept"), "/icons/phone/phone-call.png", CALL_BUTTON_SIZE, CALL_BUTTON_SIZE);
         acceptCallButton.setOnAction(e -> {
@@ -156,8 +160,9 @@ public class PhoneView {
         // =============================================================================================================
         // Call List Area
         VBox callList = new VBox();
-        callList.setStyle("-fx-background-color: lightcoral;");
         callList.setMinHeight(100);
+        callList.getStyleClass().add("call-list");
+
         Label listLabel = new Label("Call List");
         callList.getChildren().add(listLabel);
 
