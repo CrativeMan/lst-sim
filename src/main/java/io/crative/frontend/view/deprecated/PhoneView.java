@@ -4,7 +4,7 @@ import io.crative.backend.CallListener;
 import io.crative.backend.CallManager;
 import io.crative.backend.data.PhoneCall;
 import io.crative.backend.data.PhoneCallStatus;
-import io.crative.backend.fileio.FileLoader;
+import io.crative.backend.fileio.ResourceHelper;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -118,7 +118,7 @@ public class PhoneView extends Window implements CallListener {
         JPanel phoneActions = new JPanel(new FlowLayout());
 
         JButton callIncomingButton = new JButton();
-        callIncomingButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-call.png")));
+        callIncomingButton.setIcon(new ImageIcon(ResourceHelper.loadImage("/icons/phone/phone-call.png")));
         callIncomingButton.addActionListener(e -> {
             if (selectedCall == null) {
                 System.err.println("PhoneActions: No call selected");
@@ -136,7 +136,7 @@ public class PhoneView extends Window implements CallListener {
         });
 
         JButton callHoldButton = new JButton();
-        callHoldButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-hold.png")));
+        callHoldButton.setIcon(new ImageIcon(ResourceHelper.loadImage("/icons/phone/phone-hold.png")));
         callHoldButton.addActionListener(e -> {
             if (selectedCall != null) {
                 CallManager.getInstance().holdCall(selectedCall);
@@ -146,7 +146,7 @@ public class PhoneView extends Window implements CallListener {
         });
 
         JButton callCancelButton = new JButton();
-        callCancelButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-off.png")));
+        callCancelButton.setIcon(new ImageIcon(ResourceHelper.loadImage("/icons/phone/phone-off.png")));
         callCancelButton.addActionListener(e->{
             if (selectedCall != null) {
                 CallManager.getInstance().endCall(selectedCall);
@@ -156,7 +156,7 @@ public class PhoneView extends Window implements CallListener {
         });
 
         JButton callOutgoingButton = new JButton();
-        callOutgoingButton.setIcon(new ImageIcon(FileLoader.loadImage("/icons/phone/phone-outgoing.png")));
+        callOutgoingButton.setIcon(new ImageIcon(ResourceHelper.loadImage("/icons/phone/phone-outgoing.png")));
         callOutgoingButton.addActionListener(e -> System.out.println("Called an number"));
 
         phoneActions.add(callIncomingButton);
@@ -221,7 +221,7 @@ public class PhoneView extends Window implements CallListener {
         panelInfo.add(new JLabel(call.getLocation().toString()));
 
         panel.add(panelInfo, BorderLayout.WEST);
-        Image img = FileLoader.loadImageScaled("/icons/phone/phone-call.png", 2.0F);
+        Image img = ResourceHelper.loadImageScaled("/icons/phone/phone-call.png", 2.0F);
         assert img != null;
         panel.add(new JLabel(new ImageIcon(img)), BorderLayout.EAST);
 

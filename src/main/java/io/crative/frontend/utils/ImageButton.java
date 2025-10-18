@@ -23,4 +23,11 @@ public class ImageButton extends Button {
         this.setGraphic(imageView);
         this.setContentDisplay(ContentDisplay.TOP);
     }
+
+    public ImageButton(String text, String imagePath) {
+        Image image = new javafx.scene.image.Image(imagePath);
+        ImageView imageView = new javafx.scene.image.ImageView(image);
+        this.setText(text);
+        this.setGraphic(imageView);
+    }
 }

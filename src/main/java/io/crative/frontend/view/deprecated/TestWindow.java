@@ -1,6 +1,6 @@
 package io.crative.frontend.view.deprecated;
 
-import io.crative.backend.fileio.FileLoader;
+import io.crative.backend.fileio.ResourceHelper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +21,7 @@ public class TestWindow extends Window{
         panelInfo.add(new JLabel("München"));
 
         panel.add(panelInfo, BorderLayout.WEST);
-        Image img = FileLoader.loadImageScaled("/icons/phone/phone-call.png", 2.0F);
+        Image img = ResourceHelper.loadImageScaled("/icons/phone/phone-call.png", 2.0F);
         assert img != null;
         panel.add(new JLabel(new ImageIcon(img)), BorderLayout.EAST);
         this.add(panel);

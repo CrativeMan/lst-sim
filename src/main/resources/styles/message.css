@@ -1,0 +1,13 @@
+.message-bubble {
+    -fx-padding: 10;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+.message-sender {
+    -fx-background-color: #007BFF;
+}
+
+.message-receiver {
+    -fx-background-color: #363B3F;
+}
