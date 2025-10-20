@@ -9,14 +9,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
 import static io.crative.backend.internationalization.TranslationManager.t;
 
-public class PhoneView {
-    private VBox root;
+public class PhoneView extends LstView{
     private SplitPane mainSplit;
     private SplitPane conversationSplit;
     private SplitPane phoneSplit;
@@ -48,28 +46,6 @@ public class PhoneView {
 
     public PhoneView(MenuBar menuBar) {
         createLayout(menuBar);
-    }
-
-    public void show(Stage stage) {
-        Scene scene = new Scene(root, 900, 700);
-
-        scene.getStylesheets().add(getClass().getResource("/styles/global.css").toExternalForm());
-
-        stage.setScene(scene);
-        stage.setTitle("Phone Simulator");
-
-        FXWindowLayoutManager.loadLayout();
-        FXWindowLayoutManager.applyWindowLayout(stage, "phoneView", 100, 100, 900, 700);
-
-        stage.show();
-
-        FXWindowLayoutManager.addLayoutSaveListeners(stage, "phoneView");
-
-        stage.setOnShown(e -> {
-            mainSplit.setDividerPositions(MAIN_SPLIT_DIVIDER);
-            conversationSplit.setDividerPositions(CONVERSATION_SPLIT_DIVIDER);
-            phoneSplit.setDividerPositions(PHONE_SPLIT_DIVIDER);
-        });
     }
 
     private void createLayout(MenuBar menuBar) {
