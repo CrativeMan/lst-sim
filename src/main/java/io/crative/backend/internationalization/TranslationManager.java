@@ -17,7 +17,7 @@ public class TranslationManager {
     private TranslationManager() {
         loadLanguage("en_US");
         loadLanguage("de_DE");
-        fallbackLanguage = languages.get("de_DE");
+        fallbackLanguage = languages.get("en_US");
     }
 
     public static TranslationManager getInstance() {

@@ -1,26 +1,28 @@
 package io.crative.frontend.view;
 
+import io.crative.backend.CallListener;
+import io.crative.backend.CallManager;
+import io.crative.backend.data.PhoneCall;
 import io.crative.frontend.utils.ImageButton;
 import io.crative.frontend.view.messages.*;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
 
 import static io.crative.backend.internationalization.TranslationManager.t;
 
-public class PhoneView extends LstView{
+public class PhoneView extends LstView implements CallListener {
     private SplitPane mainSplit;
     private SplitPane conversationSplit;
     private SplitPane phoneSplit;
 
     private VBox conversationMessagesContainer;
     private ScrollPane conversationScroll;
+    private VBox callListContainer;
+    private ScrollPane callListScroll;
 
     private final String[] CONVERSATION_BUTTON_KEYS = {
             "conversation.phone.start",
@@ -45,6 +47,7 @@ public class PhoneView extends LstView{
     private static final double CALL_BUTTON_SIZE = 16;
 
     public PhoneView(MenuBar menuBar) {
+        CallManager.getInstance().registerListener(this);
         createLayout(menuBar);
     }
 
@@ -139,17 +142,55 @@ public class PhoneView extends LstView{
         callList.setMinHeight(100);
         callList.getStyleClass().add("call-list");
 
-        Label listLabel = new Label("Call List");
-        callList.getChildren().add(listLabel);
+        callListContainer = new VBox(5);
+        callListContainer.setStyle("-fx-padding: 10;");
+        callListContainer.getStyleClass().add("call-list-container");
 
-        split.getItems().addAll(phoneButtons, callList);
+        callListScroll = new ScrollPane(callListContainer);
+        callListScroll.setFitToWidth(true);
+        callListScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        callListScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        split.getItems().addAll(phoneButtons, callListScroll);
         split.setDividerPositions(PHONE_SPLIT_DIVIDER);
         return split;
+    }
+
+    public void addCall(PhoneCall call) {
+        CallEntry entry = new CallEntry(call);
+        callListContainer.getChildren().add(0, entry);
     }
 
     public void addMessage(String text, boolean isSender) {
         Message message = new Message(text, isSender);
         MessageBubble bubble = new MessageBubble(message);
         conversationMessagesContainer.getChildren().add(bubble);
+    }
+
+    @Override
+    public void onCallReceived(PhoneCall call) {
+        javafx.application.Platform.runLater(() -> {
+            addCall(call);
+        });
+    }
+
+    @Override
+    public void onCallAccepted(PhoneCall call) {
+
+    }
+
+    @Override
+    public void onCallEnded(PhoneCall call) {
+
+    }
+
+    @Override
+    public void onCallHeld(PhoneCall call) {
+
+    }
+
+    @Override
+    public void onCallResumed(PhoneCall call) {
+
     }
 }

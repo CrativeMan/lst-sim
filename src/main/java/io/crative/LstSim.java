@@ -1,5 +1,8 @@
 package io.crative;
 
+import io.crative.backend.CallManager;
+import io.crative.backend.data.Location;
+import io.crative.backend.data.PhoneCall;
 import io.crative.backend.internationalization.TranslationManager;
 import io.crative.frontend.view.CallView;
 import io.crative.frontend.view.PhoneView;
@@ -23,19 +26,22 @@ public class LstSim extends Application {
     public void start(Stage stage) throws Exception {
         this.primaryStage = stage;
 
-        MenuBar menuBar = createMenuBar();
+        MenuBar phoneViewMenuBar = createMenuBar();
+        MenuBar callViewMenuBar = createMenuBar();
 
-        phoneView = new PhoneView(menuBar);
+        phoneView = new PhoneView(phoneViewMenuBar);
         Stage phoneStage = new Stage();
         phoneView.show(phoneStage, phoneView.getRoot(), 900, 700, t("phone.simulator.title"), "phoneView");
 
-        callView = new CallView(menuBar);
+        callView = new CallView(callViewMenuBar);
         Stage callStage = new Stage();
         callView.show(callStage, callView.getRoot(), 600, 400, t("call.simulator.title"), "callView");
 
         stage.setOnCloseRequest(this::exitApplication);
         phoneStage.setOnCloseRequest(this::exitApplication);
         callStage.setOnCloseRequest(this::exitApplication);
+
+        CallManager.getInstance().receiveIncomingCall("+49 1515 2249137", "Kiara Hannig", new Location());
     }
 
     private MenuBar createMenuBar() {
@@ -43,33 +49,18 @@ public class LstSim extends Application {
 
         Menu fileMenu = new Menu(t("app.menu.file"));
         MenuItem exitItem = new MenuItem(t("app.menu.file.exit"));
-        exitItem.setOnAction(e -> System.exit(0));
+        exitItem.setOnAction(e -> exitApplication(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST)));
         fileMenu.getItems().add(exitItem);
 
         Menu viewMenu = new Menu(t("app.menu.view"));
         CheckMenuItem phoneViewItem = new CheckMenuItem(t("app.menu.view.phone"));
         phoneViewItem.setSelected(true);
-        phoneViewItem.setOnAction(e -> {
-            if (phoneViewItem.isSelected()) {
-                phoneView.getRoot().getScene().getWindow().show();
-            } else {
-                phoneView.getRoot().getScene().getWindow().hide();
-            }
-        });
         CheckMenuItem callViewItem = new CheckMenuItem(t("app.menu.view.call"));
         callViewItem.setSelected(true);
-        callViewItem.setOnAction(e -> {
-            if (callViewItem.isSelected()) {
-                callView.getRoot().getScene().getWindow().show();
-            } else {
-                callView.getRoot().getScene().getWindow().hide();
-            }
-        });
         viewMenu.getItems().addAll(phoneViewItem, callViewItem);
 
-
         menuBar.getMenus().add(fileMenu);
-        fileMenu.getItems().add(viewMenu);
+        menuBar.getMenus().add(viewMenu);
 
         return menuBar;
     }
@@ -85,8 +76,12 @@ public class LstSim extends Application {
 
         alert.getButtonTypes().setAll(okButton, cancelButton);
 
-        if (alert.showAndWait().orElse(cancelButton) == cancelButton) {
-            e.consume();
-        }
+        alert.showAndWait().ifPresent(type -> {
+            if (type == okButton) {
+                System.exit(0);
+            } else {
+                e.consume();
+            }
+        });
     }
 }
