@@ -48,7 +48,7 @@ public class TranslationManager {
     public String translate(String key) {
         Properties currentLanguage = languages.get(this.currentLanguage);
 
-        if (currentLanguage != null && currentLanguage.contains(key)) {
+        if (currentLanguage != null && currentLanguage.containsKey(key)) {
             return currentLanguage.getProperty(key);
         }
 
