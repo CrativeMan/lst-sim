@@ -2,6 +2,7 @@ package io.crative.frontend.view;
 
 import io.crative.backend.CallListener;
 import io.crative.backend.CallManager;
+import io.crative.backend.data.Location;
 import io.crative.backend.data.PhoneCall;
 import io.crative.frontend.utils.ImageButton;
 import io.crative.frontend.view.messages.*;
@@ -15,14 +16,10 @@ import javafx.scene.layout.VBox;
 import static io.crative.backend.internationalization.TranslationManager.t;
 
 public class PhoneView extends LstView implements CallListener {
-    private SplitPane mainSplit;
-    private SplitPane conversationSplit;
-    private SplitPane phoneSplit;
 
     private VBox conversationMessagesContainer;
     private ScrollPane conversationScroll;
     private VBox callListContainer;
-    private ScrollPane callListScroll;
 
     private final String[] CONVERSATION_BUTTON_KEYS = {
             "conversation.phone.start",
@@ -51,12 +48,18 @@ public class PhoneView extends LstView implements CallListener {
         createLayout(menuBar);
     }
 
+    @Override
+    public void cleanup() {
+        super.cleanup();
+        CallManager.getInstance().unregisterListener(this);
+    }
+
     private void createLayout(MenuBar menuBar) {
-        mainSplit = new SplitPane();
+        SplitPane mainSplit = new SplitPane();
         mainSplit.setOrientation(Orientation.HORIZONTAL);
 
-        conversationSplit = createConversationSplit();
-        phoneSplit = createPhoneSplit();
+        SplitPane conversationSplit = createConversationSplit();
+        SplitPane phoneSplit = createPhoneSplit();
 
         mainSplit.getItems().addAll(conversationSplit, phoneSplit);
         mainSplit.setDividerPositions(MAIN_SPLIT_DIVIDER);
@@ -82,9 +85,7 @@ public class PhoneView extends LstView implements CallListener {
         conversationScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         // Auto-scroll to bottom when new messages added
-        conversationMessagesContainer.heightProperty().addListener((obs, oldVal, newVal) -> {
-            conversationScroll.setVvalue(1.0);
-        });
+        conversationMessagesContainer.heightProperty().addListener((obs, oldVal, newVal) -> conversationScroll.setVvalue(1.0));
 
         // =============================================================================================================
         // Conversation Action Buttons
@@ -123,18 +124,14 @@ public class PhoneView extends LstView implements CallListener {
         phoneButtons.getStyleClass().add("phone-buttons");
 
         Button acceptCallButton = new ImageButton(t("call.phone.accept"), "/icons/phone/phone-call.png", CALL_BUTTON_SIZE, CALL_BUTTON_SIZE);
-        acceptCallButton.setOnAction(e -> {
-            System.out.println("Accept Call Pressed");
-        });
+        acceptCallButton.setOnAction(e -> System.out.println("Accept Call Pressed"));
         Button holdCallButton = new ImageButton(t("call.phone.hold"), "/icons/phone/phone-hold.png", CALL_BUTTON_SIZE, CALL_BUTTON_SIZE);
-        holdCallButton.setOnAction(e -> {
-            System.out.println("Hold Call Pressed");
-        });
+        holdCallButton.setOnAction(e -> System.out.println("Hold Call Pressed"));
         Button endCallButton = new ImageButton(t("call.phone.end"), "/icons/phone/phone-off.png", CALL_BUTTON_SIZE, CALL_BUTTON_SIZE);
-        endCallButton.setOnAction(e -> {
-            System.out.println("End Call Pressed");
-        });
-        phoneButtons.getChildren().addAll(acceptCallButton, holdCallButton, endCallButton);
+        endCallButton.setOnAction(e -> System.out.println("End Call Pressed"));
+        Button testButton = new Button("Test Add Call");
+        testButton.setOnAction(e -> CallManager.getInstance().receiveIncomingCall("+49 123 456", "Test Caller", new Location()));
+        phoneButtons.getChildren().addAll(acceptCallButton, holdCallButton, endCallButton, testButton);
 
         // =============================================================================================================
         // Call List Area
@@ -146,7 +143,7 @@ public class PhoneView extends LstView implements CallListener {
         callListContainer.setStyle("-fx-padding: 10;");
         callListContainer.getStyleClass().add("call-list-container");
 
-        callListScroll = new ScrollPane(callListContainer);
+        ScrollPane callListScroll = new ScrollPane(callListContainer);
         callListScroll.setFitToWidth(true);
         callListScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         callListScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -158,7 +155,7 @@ public class PhoneView extends LstView implements CallListener {
 
     public void addCall(PhoneCall call) {
         CallEntry entry = new CallEntry(call);
-        callListContainer.getChildren().add(0, entry);
+        callListContainer.getChildren().addFirst(entry);
     }
 
     public void addMessage(String text, boolean isSender) {
@@ -169,8 +166,11 @@ public class PhoneView extends LstView implements CallListener {
 
     @Override
     public void onCallReceived(PhoneCall call) {
+        System.out.println("PhoneView: onCallReceived called for " + call.getPhoneNumber());
         javafx.application.Platform.runLater(() -> {
+            System.out.println("PhoneView: Adding call to UI");
             addCall(call);
+            System.out.println("PhoneView: Call list size now: " + callListContainer.getChildren().size());
         });
     }
 

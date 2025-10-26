@@ -1,9 +1,8 @@
 package io.crative.frontend.utils;
 
-import io.crative.backend.data.AssetManager;
+import io.crative.backend.AssetManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class ImageButton extends Button {

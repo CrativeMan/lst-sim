@@ -2,8 +2,7 @@ package io.crative;
 
 import io.crative.backend.CallManager;
 import io.crative.backend.data.Location;
-import io.crative.backend.data.PhoneCall;
-import io.crative.backend.internationalization.TranslationManager;
+import io.crative.frontend.utils.LstAlerts;
 import io.crative.frontend.view.CallView;
 import io.crative.frontend.view.PhoneView;
 import javafx.application.Application;
@@ -41,7 +40,11 @@ public class LstSim extends Application {
         phoneStage.setOnCloseRequest(this::exitApplication);
         callStage.setOnCloseRequest(this::exitApplication);
 
-        CallManager.getInstance().receiveIncomingCall("+49 1515 2249137", "Kiara Hannig", new Location());
+        javafx.application.Platform.runLater(() -> {
+            System.out.println("Creating test call...");
+            CallManager.getInstance().receiveIncomingCall("+49 1515 2249137", "Kiara Hannig", new Location());
+            LstAlerts.errorAlert(t("callentry.error.already_one_active_call"));
+        });
     }
 
     private MenuBar createMenuBar() {
@@ -78,6 +81,8 @@ public class LstSim extends Application {
 
         alert.showAndWait().ifPresent(type -> {
             if (type == okButton) {
+                phoneView.cleanup();
+                callView.cleanup();
                 System.exit(0);
             } else {
                 e.consume();

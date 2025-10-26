@@ -30,9 +30,11 @@ public class CallManager {
     public void receiveIncomingCall(String number, String callerName, Location location) {
         PhoneCall call = new PhoneCall(number, callerName, location);
         callQueue.add(call);
+        System.out.println("CallManager: Call received, notifying " + listeners.size() + " listeners");
         notifyCallReceived(call);
     }
 
+    //TODO: send error alert maybe?
     public void acceptCall(PhoneCall call) {
         if (activeCall != null) {
             System.err.println("CallManager: Already one active call");

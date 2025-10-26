@@ -22,7 +22,15 @@ public abstract class LstView {
         FXWindowLayoutManager.addLayoutSaveListeners(stage, id);
     }
 
+    public void cleanup() {
+        // Override if needed
+    }
+
     public Parent getRoot() {
         return root;
+    }
+
+    public static String formatedBackgroundColor(String hex) {
+        return "-fx-background-color: " + hex + ";";
     }
 }
