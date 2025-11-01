@@ -25,11 +25,19 @@ public class TimeManager {
     }
 
     public void pause() {
+        if (paused) {
+            System.out.println("TimeManager: The Game Time is already paused");
+            return;
+        }
         paused = true;
         notifyOnTimePaused();
     }
 
     public void resume() {
+        if (!paused) {
+            System.out.println("TimeManager: The Game Time is already running");
+            return;
+        }
         paused = false;
         notifyOnTimeResumed();
     }
@@ -45,6 +53,18 @@ public class TimeManager {
 
     // =============================================================================================================
     // Listener Management
+    public void registerListener(TimeListener listener) {
+        if (this.listeners.contains(listener))
+            System.err.println("TimeManager: This listener is already registered: " + listener.getName());
+        this.listeners.add(listener);
+    }
+
+    public void unregisterListener(TimeListener listener) {
+        if (!this.listeners.contains(listener))
+            System.err.println("TimeManager: This listener is not registered: " + listener.getName());
+        this.listeners.remove(listener);
+    }
+
     private void notifyTimeChanged() {
         for (TimeListener listener : listeners) {
             listener.onTimeChanged(gameTime);
