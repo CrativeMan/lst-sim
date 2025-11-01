@@ -1,9 +1,9 @@
 package io.crative.frontend.view;
 
-import io.crative.backend.CallListener;
-import io.crative.backend.CallManager;
-import io.crative.backend.data.Location;
-import io.crative.backend.data.PhoneCall;
+import io.crative.backend.data.call.CallListener;
+import io.crative.backend.data.call.CallManager;
+import io.crative.backend.data.call.Location;
+import io.crative.backend.data.call.PhoneCall;
 import io.crative.frontend.utils.ImageButton;
 import io.crative.frontend.view.messages.*;
 import javafx.geometry.Orientation;

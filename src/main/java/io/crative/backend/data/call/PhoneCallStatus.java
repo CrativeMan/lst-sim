@@ -1,4 +1,4 @@
-package io.crative.backend.data;
+package io.crative.backend.data.call;
 
 import static io.crative.backend.internationalization.TranslationManager.t;
 

@@ -1,4 +1,4 @@
-package io.crative.backend.data;
+package io.crative.backend.data.call;
 
 import java.sql.Timestamp;
 import java.util.List;

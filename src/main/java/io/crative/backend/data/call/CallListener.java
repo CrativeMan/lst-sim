@@ -1,6 +1,4 @@
-package io.crative.backend;
-
-import io.crative.backend.data.PhoneCall;
+package io.crative.backend.data.call;
 
 public interface CallListener {
     void onCallReceived(PhoneCall call);

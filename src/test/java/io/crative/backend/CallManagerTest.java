@@ -1,7 +1,8 @@
 package io.crative.backend;
 
-import io.crative.backend.data.Location;
-import io.crative.backend.data.PhoneCall;
+import io.crative.backend.data.call.CallManager;
+import io.crative.backend.data.call.Location;
+import io.crative.backend.data.call.PhoneCall;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

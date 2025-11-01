@@ -1,9 +1,9 @@
 package io.crative.frontend.view.deprecated;
 
-import io.crative.backend.CallListener;
-import io.crative.backend.CallManager;
-import io.crative.backend.data.PhoneCall;
-import io.crative.backend.data.PhoneCallStatus;
+import io.crative.backend.data.call.CallListener;
+import io.crative.backend.data.call.CallManager;
+import io.crative.backend.data.call.PhoneCall;
+import io.crative.backend.data.call.PhoneCallStatus;
 import io.crative.backend.fileio.ResourceHelper;
 
 import javax.swing.*;

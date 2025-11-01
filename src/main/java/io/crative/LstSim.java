@@ -1,7 +1,7 @@
 package io.crative;
 
-import io.crative.backend.CallManager;
-import io.crative.backend.data.Location;
+import io.crative.backend.data.call.CallManager;
+import io.crative.backend.data.call.Location;
 import io.crative.frontend.utils.LstAlerts;
 import io.crative.frontend.view.CallView;
 import io.crative.frontend.view.PhoneView;

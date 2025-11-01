@@ -1,8 +1,4 @@
-package io.crative.backend;
-
-import io.crative.backend.data.Location;
-import io.crative.backend.data.PhoneCall;
-import io.crative.backend.data.PhoneCallStatus;
+package io.crative.backend.data.call;
 
 import java.util.ArrayList;
 import java.util.List;

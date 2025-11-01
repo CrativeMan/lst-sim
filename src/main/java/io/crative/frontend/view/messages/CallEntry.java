@@ -1,8 +1,8 @@
 package io.crative.frontend.view.messages;
 
 import io.crative.backend.AssetManager;
-import io.crative.backend.data.PhoneCall;
-import io.crative.backend.data.PhoneCallStatus;
+import io.crative.backend.data.call.PhoneCall;
+import io.crative.backend.data.call.PhoneCallStatus;
 import io.crative.frontend.view.LstView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
