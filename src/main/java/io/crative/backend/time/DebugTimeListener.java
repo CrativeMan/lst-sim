@@ -2,10 +2,14 @@ package io.crative.backend.time;
 
 import java.time.LocalDateTime;
 
-public class DebugTimeListener implements TimeListener{
+public class DebugTimeListener implements TimeListener {
+    public DebugTimeListener() {
+        TimeManager.getInstance().registerListener(this);
+    }
+
     @Override
     public void onTimeChanged(LocalDateTime gameTime) {
-        System.out.println("DebugTimeListener: Game Time changed to " + gameTime.toString());
+
     }
 
     @Override
@@ -25,6 +29,6 @@ public class DebugTimeListener implements TimeListener{
 
     @Override
     public String getName() {
-        return "";
+        return "DebugTimeListener";
     }
 }

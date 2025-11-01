@@ -1,7 +1,10 @@
 package io.crative.backend.time;
 
+import io.crative.backend.data.call.CallManager;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TimeManager {
@@ -9,7 +12,21 @@ public class TimeManager {
     private boolean paused;
     private double speedMultiplier; // 1.0 real time 2.0 double time
     private long lastUpdateMilis;
-    private List<TimeListener> listeners;
+    private final List<TimeListener> listeners;
+
+    public static TimeManager instance = new TimeManager();
+
+    private TimeManager() {
+        this.gameTime = LocalDateTime.now();
+        this.paused = false;
+        this.speedMultiplier = 1.0;
+        this.lastUpdateMilis = System.currentTimeMillis();
+        this.listeners = new ArrayList<>();
+    }
+
+    public static TimeManager getInstance() {
+        return instance;
+    }
 
     public void update() {
         if (paused) return;
@@ -20,7 +37,6 @@ public class TimeManager {
 
         long gameElapsed = (long) (elapsed * speedMultiplier);
         gameTime = gameTime.plus(gameElapsed, ChronoUnit.MILLIS);
-
         notifyTimeChanged();
     }
 
@@ -54,14 +70,20 @@ public class TimeManager {
     // =============================================================================================================
     // Listener Management
     public void registerListener(TimeListener listener) {
-        if (this.listeners.contains(listener))
+        if (this.listeners.contains(listener)) {
             System.err.println("TimeManager: This listener is already registered: " + listener.getName());
+            return;
+        }
+        System.out.println("TimeManager: Registered TimeListener: " + listener.getName());
         this.listeners.add(listener);
     }
 
     public void unregisterListener(TimeListener listener) {
-        if (!this.listeners.contains(listener))
+        if (!this.listeners.contains(listener)) {
             System.err.println("TimeManager: This listener is not registered: " + listener.getName());
+            return;
+        }
+        System.out.println("TimeManager: Unregistered TimeListener: " + listener.getName());
         this.listeners.remove(listener);
     }
 

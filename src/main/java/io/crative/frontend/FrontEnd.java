@@ -12,13 +12,13 @@ import javafx.stage.WindowEvent;
 import static io.crative.backend.internationalization.TranslationManager.t;
 
 public class FrontEnd {
-    private static  Stage primaryStage;
+    private static Stage primaryStage;
     private static PhoneView phoneView;
     private static CallView callView;
 
 
     public void initialize(Stage stage) {
-        this.primaryStage = stage;
+        primaryStage = stage;
 
         MenuBar phoneViewMenuBar = createMenuBar();
         MenuBar callViewMenuBar = createMenuBar();
