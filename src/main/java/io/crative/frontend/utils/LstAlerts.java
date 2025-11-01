@@ -12,4 +12,12 @@ public class LstAlerts {
 
         alert.showAndWait();
     }
+
+    public static void infoAlert(String text) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(t("information"));
+        alert.setContentText(text);
+
+        alert.showAndWait();
+    }
 }

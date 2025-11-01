@@ -2,7 +2,10 @@ package io.crative.backend;
 
 import io.crative.backend.time.DebugTimeListener;
 import io.crative.backend.time.TimeManager;
+import io.crative.event.EventBus;
+import io.crative.event.ui.ShowAlertEvent;
 import javafx.animation.AnimationTimer;
+import javafx.scene.control.Alert;
 
 public class SimulationEngine {
     private DebugTimeListener debugTimeListener = new DebugTimeListener();
@@ -30,6 +33,7 @@ public class SimulationEngine {
                 }
             }
         };
+        EventBus.getInstance().postOnUIThread(new ShowAlertEvent("test", Alert.AlertType.ERROR));
         gameLoop.start();
     }
 

@@ -2,12 +2,16 @@ package io.crative.frontend;
 
 import io.crative.backend.data.call.CallManager;
 import io.crative.backend.data.call.Location;
+import io.crative.event.EventBus;
+import io.crative.event.ui.ShowAlertEvent;
 import io.crative.frontend.utils.LstAlerts;
 import io.crative.frontend.view.CallView;
 import io.crative.frontend.view.PhoneView;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.sql.SQLOutput;
 
 import static io.crative.backend.internationalization.TranslationManager.t;
 
@@ -18,6 +22,8 @@ public class FrontEnd {
 
 
     public void initialize(Stage stage) {
+        EventBus.getInstance().subscribe(ShowAlertEvent.class, this::handleAlert);
+
         primaryStage = stage;
 
         MenuBar phoneViewMenuBar = createMenuBar();
@@ -79,10 +85,21 @@ public class FrontEnd {
             if (type == okButton) {
                 phoneView.cleanup();
                 callView.cleanup();
+                EventBus.getInstance().unsubscribe(ShowAlertEvent.class, this::handleAlert);
                 System.exit(0);
             } else {
                 e.consume();
             }
         });
+    }
+
+    // TODO: implement other alert types
+    private void handleAlert(ShowAlertEvent event) {
+        switch (event.getType()) {
+            case ERROR -> LstAlerts.errorAlert(t(event.getMessageKey()));
+            case INFORMATION -> LstAlerts.infoAlert(t(event.getMessageKey()));
+            case NONE, WARNING, CONFIRMATION -> System.out.println("ShowAlertEvent: Alert type not yet implemented: " + event.getType());
+            default -> System.out.println("ShowAlertEvent: Unsupported alert type: " + event.getType());
+        }
     }
 }
