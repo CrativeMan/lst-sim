@@ -2,6 +2,7 @@ package io.crative.frontend;
 
 import io.crative.backend.data.call.CallManager;
 import io.crative.backend.data.call.Location;
+import io.crative.event.EndApplicationEvent;
 import io.crative.event.EventBus;
 import io.crative.event.ui.ShowAlertEvent;
 import io.crative.frontend.utils.LstAlerts;
@@ -44,7 +45,6 @@ public class FrontEnd {
         javafx.application.Platform.runLater(() -> {
             System.out.println("Creating test call...");
             CallManager.getInstance().receiveIncomingCall("+49 1515 2249137", "Kiara Hannig", new Location());
-            LstAlerts.errorAlert(t("callentry.error.already_one_active_call"));
         });
     }
 
@@ -86,7 +86,7 @@ public class FrontEnd {
                 phoneView.cleanup();
                 callView.cleanup();
                 EventBus.getInstance().unsubscribe(ShowAlertEvent.class, this::handleAlert);
-                System.exit(0);
+                EventBus.getInstance().postOnUIThread(new EndApplicationEvent("User initiated exit"));
             } else {
                 e.consume();
             }

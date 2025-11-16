@@ -8,6 +8,7 @@ public class ShowAlertEvent extends Event {
     private final Alert.AlertType type;
 
     public ShowAlertEvent(String messageKey, Alert.AlertType type) {
+        super("ShowAlertEvent");
         this.messageKey = messageKey;
         this.type = type;
     }

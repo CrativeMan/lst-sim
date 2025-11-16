@@ -7,5 +7,6 @@ public interface TimeListener {
     void onTimePaused();
     void onTimeResumed();
     void onSpeedChanged(double multiplier);
+    void delete();
     String getName();
 }
