@@ -28,6 +28,11 @@ public class DebugTimeListener implements TimeListener {
     }
 
     @Override
+    public void delete() {
+        TimeManager.getInstance().unregisterListener(this);
+    }
+
+    @Override
     public String getName() {
         return "DebugTimeListener";
     }

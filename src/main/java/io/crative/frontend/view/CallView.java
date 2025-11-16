@@ -1,21 +1,18 @@
 package io.crative.frontend.view;
 
 import io.crative.backend.data.units.BasicUnit;
-import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 // TODO: make all text translateable
 public class CallView extends LstView {
     private SplitPane mainSplit;
-    private HBox actionBar;
+    private MenuBar actionBar;
     private SplitPane callCreationSplit;
-    private TableView resources;
+    private TableView<BasicUnit> resources;
 
     public CallView(MenuBar menuBar) {
         createLayout(menuBar);
@@ -34,9 +31,6 @@ public class CallView extends LstView {
 
         resources = createResourcesTable();
 
-        resources.getItems().add(new BasicUnit(2, "RW 1-1", "Rettungswagen"));
-        resources.getItems().add(new BasicUnit(4, "LF 20", "Löschgruppenfahrzeug"));
-
         callCreationSplit.getItems().add(information);
         callCreationSplit.getItems().add(resources);
 
@@ -49,11 +43,9 @@ public class CallView extends LstView {
         VBox.setVgrow(mainSplit, Priority.ALWAYS);
     }
 
-    private HBox createActionBar() {
-        HBox bar = new HBox(5);
-        bar.setPadding(new Insets(5));
-        bar.setAlignment(Pos.CENTER_LEFT);
-        bar.getStyleClass().add("action-bar");
+    private MenuBar createActionBar() {
+        MenuBar menuBar = new MenuBar();
+        menuBar.getStyleClass().add("action-bar");
 
         String[] callCreation = {
                 "Neu", "E-Ort von Anrufer", "E-Ort von Einsatz"
@@ -67,35 +59,31 @@ public class CallView extends LstView {
                 "Vorschlag", "Erhöhen", "Leeren", "Disponieren"
         };
 
+        Menu callCreationMenu = new Menu("Einsatzanlage");
         for (String label : callCreation) {
-            Button btn = new Button(label);
-            btn.getStyleClass().add("toolbar-button");
-            bar.getChildren().add(btn);
+            MenuItem item = new MenuItem(label);
+            callCreationMenu.getItems().add(item);
         }
 
-        Separator separator = new Separator(Orientation.VERTICAL);
-        bar.getChildren().add(separator);
-
+        Menu savingMenu = new Menu("Speichern");
         for (String label : saving) {
-            Button btn = new Button(label);
-            btn.getStyleClass().add("toolbar-button");
-            bar.getChildren().add(btn);
+            MenuItem item = new MenuItem(label);
+            savingMenu.getItems().add(item);
         }
 
-        separator = new Separator(Orientation.VERTICAL);
-        bar.getChildren().add(separator);
-
+        Menu unitsMenu = new Menu("Einheiten");
         for (String label : units) {
-            Button btn = new Button(label);
-            btn.getStyleClass().add("toolbar-button");
-            bar.getChildren().add(btn);
+            MenuItem item = new MenuItem(label);
+            unitsMenu.getItems().add(item);
         }
 
-        return bar;
+        menuBar.getMenus().addAll(callCreationMenu, savingMenu, unitsMenu);
+
+        return menuBar;
     }
 
-    private TableView createResourcesTable() {
-        TableView table = new TableView();
+    private TableView<BasicUnit> createResourcesTable() {
+        TableView<BasicUnit> table = new TableView<BasicUnit>();
         table.setPlaceholder(new Label("Keine Ressourcen verfügbar"));
 
         TableColumn<BasicUnit, String> statusCol = new TableColumn<>("Status");
