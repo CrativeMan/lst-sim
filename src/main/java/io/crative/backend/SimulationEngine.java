@@ -2,6 +2,7 @@ package io.crative.backend;
 
 import io.crative.backend.time.TimeManager;
 import io.crative.event.EndApplicationEvent;
+import io.crative.event.Event;
 import io.crative.event.EventBus;
 import javafx.animation.AnimationTimer;
 
@@ -56,6 +57,7 @@ public class SimulationEngine {
             gameLoop.stop();
             System.out.println("Bye");
             EventBus.getInstance().unsubscribe(EndApplicationEvent.class, event->stop());
+            System.out.println(EventBus.getInstance().getTotalSubscriberCount());
             System.exit(0);
         }
     }

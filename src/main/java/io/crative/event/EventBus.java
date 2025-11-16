@@ -1,5 +1,6 @@
 package io.crative.event;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +25,14 @@ public class EventBus {
     }
 
     public <T> void unsubscribe(Class<T> eventType, Consumer<T> handler) {
+        System.out.println("EventBus: Total subscribers before unsubscription: " + getTotalSubscriberCount());
         List<Consumer<?>> handlers = subscribers.get(eventType);
         if (handlers != null) {
+            System.out.println("EventBus: Unsubscribing handler from event type " + eventType.getSimpleName());
             handlers.remove(handler);
         }
+        System.out.println("EventBus: Unsubscribed handler from event type " + eventType.getSimpleName());
+        System.out.println("EventBus: Total subscribers after unsubscription: " + getTotalSubscriberCount());
     }
 
     public <T> void post(T event) {
@@ -50,5 +55,9 @@ public class EventBus {
 
     public <T> void postOnUIThread(T event) {
         javafx.application.Platform.runLater(() -> post(event));
+    }
+
+    public int getTotalSubscriberCount() {
+        return subscribers.values().stream().mapToInt(List::size).sum();
     }
 }
