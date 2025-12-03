@@ -21,6 +21,7 @@
 
               gtk3
               glib
+              jdt-language-server
               gdk-pixbuf
               pango
               cairo
