@@ -1,6 +1,7 @@
 package io.crative.frontend.view;
 
 import io.crative.backend.data.units.*;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -103,6 +104,44 @@ public class CallView extends LstView {
         table.getColumns().add(statusCol);
         table.getColumns().add(radioNameCol);
         table.getColumns().add(unitTypeCol);
+
+        table.setRowFactory(tv -> {
+            TableRow<BasicUnit> row = new TableRow<>();
+
+            ContextMenu menu = new ContextMenu();
+
+            MenuItem openDetails = new MenuItem("Details anzeigen");
+            MenuItem dispatch = new MenuItem("Alarmieren");
+            MenuItem remove = new MenuItem("Entfernen");
+
+            menu.getItems().addAll(openDetails, dispatch, remove);
+
+            // Show menu only if row contains an item
+            row.contextMenuProperty().bind(
+                    Bindings.when(row.emptyProperty())
+                            .then((ContextMenu) null)
+                            .otherwise(menu)
+            );
+
+            // Add actions
+            openDetails.setOnAction(e -> {
+                BasicUnit unit = row.getItem();
+                System.out.println("Opening details for: " + unit.getRadioName());
+                // openDetailsWindow(unit);
+            });
+
+            dispatch.setOnAction(e -> {
+                BasicUnit unit = row.getItem();
+                System.out.println("Dispatching: " + unit.getRadioName());
+            });
+
+            remove.setOnAction(e -> {
+                BasicUnit unit = row.getItem();
+                table.getItems().remove(unit);
+            });
+
+            return row;
+        });
 
         return table;
     }
