@@ -1,8 +1,8 @@
 package io.crative.backend;
 
-import io.crative.backend.data.call.CallManager;
-import io.crative.backend.data.call.Location;
-import io.crative.backend.data.call.PhoneCall;
+import io.crative.backend.data.phonecall.PhoneCallManager;
+import io.crative.backend.data.phonecall.Location;
+import io.crative.backend.data.phonecall.PhoneCall;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,11 +10,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CallManagerTest {
 
-    private CallManager callManager;
+    private PhoneCallManager callManager;
 
     @BeforeEach
     void setUp() {
-        callManager = CallManager.getInstance();
+        callManager = PhoneCallManager.getInstance();
         // Clear any existing calls for isolation (if needed, add a clear method to CallManager)
     }
 

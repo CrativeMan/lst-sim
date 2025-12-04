@@ -1,4 +1,4 @@
-package io.crative.backend.data.call;
+package io.crative.backend.data.phonecall;
 
 import java.util.Stack;
 

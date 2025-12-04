@@ -1,23 +1,23 @@
-package io.crative.backend.data.call;
+package io.crative.backend.data.phonecall;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CallManager {
+public class PhoneCallManager {
     private final List<PhoneCall> callQueue;
-    private final List<CallListener> listeners;
+    private final List<PhoneCallListener> listeners;
     private PhoneCall activeCall;
 
-    private static final CallManager instance = new CallManager();
+    private static final PhoneCallManager instance = new PhoneCallManager();
 
-    private CallManager() {
+    private PhoneCallManager() {
         callQueue = new ArrayList<>();
         listeners = new ArrayList<>();
         activeCall = null;
     }
 
-    public static CallManager getInstance() {
+    public static PhoneCallManager getInstance() {
         return instance;
     }
 
@@ -74,40 +74,40 @@ public class CallManager {
 
     // =================================================================================================================
     // Listeners
-    public void registerListener(CallListener listener) {
+    public void registerListener(PhoneCallListener listener) {
         listeners.add(listener);
     }
 
-    public void unregisterListener(CallListener listener) {
+    public void unregisterListener(PhoneCallListener listener) {
         listeners.remove(listener);
     }
 
     public void notifyCallReceived(PhoneCall call) {
-        for (CallListener l : new ArrayList<>(listeners)) {
+        for (PhoneCallListener l : new ArrayList<>(listeners)) {
             l.onCallReceived(call);
         }
     }
 
     public void notifyCallAccepted(PhoneCall call) {
-        for (CallListener l : new ArrayList<>(listeners)) {
+        for (PhoneCallListener l : new ArrayList<>(listeners)) {
             l.onCallAccepted(call);
         }
     }
 
     public void notifyCallEnded(PhoneCall call) {
-        for (CallListener l : new ArrayList<>(listeners)) {
+        for (PhoneCallListener l : new ArrayList<>(listeners)) {
             l.onCallEnded(call);
         }
     }
 
     public void notifyCallHeld(PhoneCall call) {
-        for (CallListener l : new ArrayList<>(listeners)) {
+        for (PhoneCallListener l : new ArrayList<>(listeners)) {
             l.onCallHeld(call);
         }
     }
 
     public void notifyCallResumed(PhoneCall call) {
-        for (CallListener l : new ArrayList<>(listeners)) {
+        for (PhoneCallListener l : new ArrayList<>(listeners)) {
             l.onCallResumed(call);
         }
     }

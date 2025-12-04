@@ -1,9 +1,9 @@
 package io.crative.frontend.view.deprecated;
 
-import io.crative.backend.data.call.CallListener;
-import io.crative.backend.data.call.CallManager;
-import io.crative.backend.data.call.PhoneCall;
-import io.crative.backend.data.call.PhoneCallStatus;
+import io.crative.backend.data.phonecall.PhoneCallListener;
+import io.crative.backend.data.phonecall.PhoneCallManager;
+import io.crative.backend.data.phonecall.PhoneCall;
+import io.crative.backend.data.phonecall.PhoneCallStatus;
 import io.crative.backend.fileio.ResourceHelper;
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ import java.awt.event.MouseEvent;
 import static io.crative.backend.internationalization.TranslationManager.t;
 
 @Deprecated
-public class PhoneView extends Window implements CallListener {
+public class PhoneView extends Window implements PhoneCallListener {
     private JPanel conversation;
     private JScrollPane conversationScroll;
     private JPanel phoneCalls;
@@ -52,7 +52,7 @@ public class PhoneView extends Window implements CallListener {
     public PhoneView() {
         super("phone", DEFAULT_X, DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         initializeView();
-        CallManager cm = CallManager.getInstance();
+        PhoneCallManager cm = PhoneCallManager.getInstance();
         cm.registerListener(this);
     }
 
@@ -125,10 +125,10 @@ public class PhoneView extends Window implements CallListener {
                 return;
             }
             if (selectedCall.getStatus() == PhoneCallStatus.RINGING) {
-                CallManager.getInstance().acceptCall(selectedCall);
+                PhoneCallManager.getInstance().acceptCall(selectedCall);
             } else {
                 if (selectedCall.getStatus() == PhoneCallStatus.ON_HOLD) {
-                    CallManager.getInstance().resumeCall(selectedCall);
+                    PhoneCallManager.getInstance().resumeCall(selectedCall);
                 } else {
                     System.err.println("Selected call is not ringing or on hold.");
                 }
@@ -139,7 +139,7 @@ public class PhoneView extends Window implements CallListener {
         callHoldButton.setIcon(new ImageIcon(ResourceHelper.loadImage("/icons/phone/phone-hold.png")));
         callHoldButton.addActionListener(e -> {
             if (selectedCall != null) {
-                CallManager.getInstance().holdCall(selectedCall);
+                PhoneCallManager.getInstance().holdCall(selectedCall);
             } else {
                 System.err.println("No call selected to hold.");
             }
@@ -149,7 +149,7 @@ public class PhoneView extends Window implements CallListener {
         callCancelButton.setIcon(new ImageIcon(ResourceHelper.loadImage("/icons/phone/phone-off.png")));
         callCancelButton.addActionListener(e->{
             if (selectedCall != null) {
-                CallManager.getInstance().endCall(selectedCall);
+                PhoneCallManager.getInstance().endCall(selectedCall);
             } else {
                 System.err.println("No call selected to end.");
             }

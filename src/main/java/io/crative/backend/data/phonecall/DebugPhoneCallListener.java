@@ -1,11 +1,11 @@
-package io.crative.backend.data.call;
+package io.crative.backend.data.phonecall;
 
-public class DebugCallListener implements CallListener{
+public class DebugPhoneCallListener implements PhoneCallListener {
 
     public int callReceived, callAccepted, callEnded, callHeld, callResumed;
 
-    public DebugCallListener() {
-        CallManager cm = CallManager.getInstance();
+    public DebugPhoneCallListener() {
+        PhoneCallManager cm = PhoneCallManager.getInstance();
         cm.registerListener(this);
     }
 

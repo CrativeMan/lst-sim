@@ -1,6 +1,8 @@
 package io.crative.frontend.view;
 
 import io.crative.backend.data.units.*;
+import io.crative.event.EventBus;
+import io.crative.event.ui.ShowAlertEvent;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
@@ -32,11 +34,12 @@ public class CallView extends LstView {
 
         resources = createResourcesTable();
         // TODO: remove
-        UnitHandler.addUnit(new BasicUnit(UnitOrganization.INVALID, "FFB", UnitSpeciality.INVALID, UnitType.RTW, 1));
-        UnitHandler.addUnit(new BasicUnit(UnitOrganization.INVALID, "FFB", UnitSpeciality.INVALID, UnitType.RTW, 2));
-        UnitHandler.addUnit(new BasicUnit(UnitOrganization.INVALID, "FFB", UnitSpeciality.INVALID, UnitType.KTW, 1));
-        UnitHandler.addUnit(new BasicUnit(UnitOrganization.INVALID, "FFB", UnitSpeciality.INVALID, UnitType.KTW, 2));
-        UnitHandler.addUnit(new BasicUnit(UnitOrganization.INVALID, "FFB", UnitSpeciality.INVALID, UnitType.KTW, 3));
+        UnitHandler.addUnit(new BasicUnit(UnitOrganization.RED_CROSS, "FFB", UnitSpeciality.INVALID, UnitType.RTW, 1));
+        UnitHandler.addUnit(new BasicUnit(UnitOrganization.RED_CROSS, "FFB", UnitSpeciality.INVALID, UnitType.RTW, 2));
+        UnitHandler.addUnit(new BasicUnit(UnitOrganization.RED_CROSS, "FFB", UnitSpeciality.INVALID, UnitType.RTW, 3));
+        UnitHandler.addUnit(new BasicUnit(UnitOrganization.RED_CROSS, "FFB", UnitSpeciality.INVALID, UnitType.KTW, 1));
+        UnitHandler.addUnit(new BasicUnit(UnitOrganization.RED_CROSS, "FFB", UnitSpeciality.INVALID, UnitType.KTW, 2));
+        UnitHandler.addUnit(new BasicUnit(UnitOrganization.RED_CROSS, "FFB", UnitSpeciality.INVALID, UnitType.KTW, 3));
         resources.getItems().addAll(UnitHandler.getAllUnits());
 
         callCreationSplit.getItems().add(information);
@@ -91,43 +94,42 @@ public class CallView extends LstView {
     }
 
     private TableView<BasicUnit> createResourcesTable() {
-        TableView<BasicUnit> table = new TableView<BasicUnit>();
-        table.setPlaceholder(new Label("Keine Ressourcen verfügbar"));
+        TableView<BasicUnit> unitTable = new TableView<BasicUnit>();
+        unitTable.setPlaceholder(new Label("No resources available"));
 
         TableColumn<BasicUnit, String> statusCol = new TableColumn<>("Status");
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-        TableColumn<BasicUnit, String> radioNameCol = new TableColumn<>("Funk Rufname");
+        TableColumn<BasicUnit, String> radioNameCol = new TableColumn<>("Radio Name");
         radioNameCol.setCellValueFactory(new PropertyValueFactory<>("radioName"));
-        TableColumn<BasicUnit, String> unitTypeCol = new TableColumn<>("Einheitentyp");
+        TableColumn<BasicUnit, String> unitTypeCol = new TableColumn<>("Unit Type");
         unitTypeCol.setCellValueFactory(new PropertyValueFactory<>("unitType"));
 
-        table.getColumns().add(statusCol);
-        table.getColumns().add(radioNameCol);
-        table.getColumns().add(unitTypeCol);
+        unitTable.getColumns().add(statusCol);
+        unitTable.getColumns().add(radioNameCol);
+        unitTable.getColumns().add(unitTypeCol);
 
-        table.setRowFactory(tv -> {
+        unitTable.getItems().addAll(UnitHandler.getAllUnits());
+
+        unitTable.setRowFactory(tv -> {
             TableRow<BasicUnit> row = new TableRow<>();
 
             ContextMenu menu = new ContextMenu();
 
-            MenuItem openDetails = new MenuItem("Details anzeigen");
-            MenuItem dispatch = new MenuItem("Alarmieren");
-            MenuItem remove = new MenuItem("Entfernen");
+            MenuItem openDetails = new MenuItem("Show Details");
+            MenuItem dispatch = new MenuItem("Dispatch");
 
-            menu.getItems().addAll(openDetails, dispatch, remove);
+            menu.getItems().addAll(openDetails, dispatch);
 
-            // Show menu only if row contains an item
             row.contextMenuProperty().bind(
                     Bindings.when(row.emptyProperty())
                             .then((ContextMenu) null)
                             .otherwise(menu)
             );
 
-            // Add actions
             openDetails.setOnAction(e -> {
                 BasicUnit unit = row.getItem();
                 System.out.println("Opening details for: " + unit.getRadioName());
-                // openDetailsWindow(unit);
+                EventBus.getInstance().postOnUIThread(new ShowAlertEvent("tes.test", Alert.AlertType.INFORMATION));
             });
 
             dispatch.setOnAction(e -> {
@@ -135,14 +137,9 @@ public class CallView extends LstView {
                 System.out.println("Dispatching: " + unit.getRadioName());
             });
 
-            remove.setOnAction(e -> {
-                BasicUnit unit = row.getItem();
-                table.getItems().remove(unit);
-            });
-
             return row;
         });
 
-        return table;
+        return unitTable;
     }
 }

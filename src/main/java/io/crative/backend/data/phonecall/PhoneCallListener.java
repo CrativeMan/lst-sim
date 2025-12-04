@@ -1,6 +1,6 @@
-package io.crative.backend.data.call;
+package io.crative.backend.data.phonecall;
 
-public interface CallListener {
+public interface PhoneCallListener {
     void onCallReceived(PhoneCall call);
     void onCallAccepted(PhoneCall call);
     void onCallEnded(PhoneCall call);

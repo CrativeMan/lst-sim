@@ -1,7 +1,7 @@
 package io.crative.frontend;
 
-import io.crative.backend.data.call.CallManager;
-import io.crative.backend.data.call.Location;
+import io.crative.backend.data.phonecall.PhoneCallManager;
+import io.crative.backend.data.phonecall.Location;
 import io.crative.event.EndApplicationEvent;
 import io.crative.event.EventBus;
 import io.crative.event.ui.ShowAlertEvent;
@@ -11,8 +11,6 @@ import io.crative.frontend.view.PhoneView;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
-import java.sql.SQLOutput;
 
 import static io.crative.backend.internationalization.TranslationManager.t;
 
@@ -44,7 +42,7 @@ public class FrontEnd {
 
         javafx.application.Platform.runLater(() -> {
             System.out.println("Creating test call...");
-            CallManager.getInstance().receiveIncomingCall("+49 1515 2249137", "Kiara Hannig", new Location());
+            PhoneCallManager.getInstance().receiveIncomingCall("+49 1515 2249137", "Kiara Hannig", new Location());
         });
     }
 

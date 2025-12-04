@@ -1,7 +1,5 @@
 package io.crative.backend.time;
 
-import io.crative.backend.data.call.CallManager;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;

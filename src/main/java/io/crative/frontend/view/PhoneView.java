@@ -1,9 +1,9 @@
 package io.crative.frontend.view;
 
-import io.crative.backend.data.call.CallListener;
-import io.crative.backend.data.call.CallManager;
-import io.crative.backend.data.call.Location;
-import io.crative.backend.data.call.PhoneCall;
+import io.crative.backend.data.phonecall.PhoneCallListener;
+import io.crative.backend.data.phonecall.PhoneCallManager;
+import io.crative.backend.data.phonecall.Location;
+import io.crative.backend.data.phonecall.PhoneCall;
 import io.crative.frontend.utils.ImageButton;
 import io.crative.frontend.view.messages.*;
 import javafx.geometry.Orientation;
@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 
 import static io.crative.backend.internationalization.TranslationManager.t;
 
-public class PhoneView extends LstView implements CallListener {
+public class PhoneView extends LstView implements PhoneCallListener {
 
     private VBox conversationMessagesContainer;
     private ScrollPane conversationScroll;
@@ -44,14 +44,14 @@ public class PhoneView extends LstView implements CallListener {
     private static final double CALL_BUTTON_SIZE = 16;
 
     public PhoneView(MenuBar menuBar) {
-        CallManager.getInstance().registerListener(this);
+        PhoneCallManager.getInstance().registerListener(this);
         createLayout(menuBar);
     }
 
     @Override
     public void cleanup() {
         super.cleanup();
-        CallManager.getInstance().unregisterListener(this);
+        PhoneCallManager.getInstance().unregisterListener(this);
     }
 
     private void createLayout(MenuBar menuBar) {
@@ -130,7 +130,7 @@ public class PhoneView extends LstView implements CallListener {
         Button endCallButton = new ImageButton(t("call.phone.end"), "/icons/phone/phone-off.png", CALL_BUTTON_SIZE, CALL_BUTTON_SIZE);
         endCallButton.setOnAction(e -> System.out.println("End Call Pressed"));
         Button testButton = new Button("Test Add Call");
-        testButton.setOnAction(e -> CallManager.getInstance().receiveIncomingCall("+49 123 456", "Test Caller", new Location()));
+        testButton.setOnAction(e -> PhoneCallManager.getInstance().receiveIncomingCall("+49 123 456", "Test Caller", new Location()));
         phoneButtons.getChildren().addAll(acceptCallButton, holdCallButton, endCallButton, testButton);
 
         // =============================================================================================================

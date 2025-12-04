@@ -1,4 +1,4 @@
-package io.crative.backend.data.call;
+package io.crative.backend.data.phonecall;
 
 import java.sql.Timestamp;
 import java.util.List;

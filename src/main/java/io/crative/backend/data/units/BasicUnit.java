@@ -29,9 +29,9 @@ public class BasicUnit {
         sb.append(" ");
         if (this.speciality != UnitSpeciality.INVALID) {
             sb.append(this.speciality.shortName());
+            sb.append("/");
         }
-        sb.append("/");
-        sb.append(this.unitType.kurzName);
+        sb.append(this.unitType.funkName);
         sb.append("/");
         sb.append(ongoingNumber);
 
