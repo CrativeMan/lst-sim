@@ -1,6 +1,6 @@
 package io.crative.frontend.view;
 
-import io.crative.backend.data.units.BasicUnit;
+import io.crative.backend.data.units.*;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -30,6 +30,13 @@ public class CallView extends LstView {
         VBox information = new VBox();
 
         resources = createResourcesTable();
+        // TODO: remove
+        UnitHandler.addUnit(new BasicUnit(UnitOrganization.INVALID, "FFB", UnitSpeciality.INVALID, UnitType.RTW, 1));
+        UnitHandler.addUnit(new BasicUnit(UnitOrganization.INVALID, "FFB", UnitSpeciality.INVALID, UnitType.RTW, 2));
+        UnitHandler.addUnit(new BasicUnit(UnitOrganization.INVALID, "FFB", UnitSpeciality.INVALID, UnitType.KTW, 1));
+        UnitHandler.addUnit(new BasicUnit(UnitOrganization.INVALID, "FFB", UnitSpeciality.INVALID, UnitType.KTW, 2));
+        UnitHandler.addUnit(new BasicUnit(UnitOrganization.INVALID, "FFB", UnitSpeciality.INVALID, UnitType.KTW, 3));
+        resources.getItems().addAll(UnitHandler.getAllUnits());
 
         callCreationSplit.getItems().add(information);
         callCreationSplit.getItems().add(resources);
